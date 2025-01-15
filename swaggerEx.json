@@ -1,0 +1,57 @@
+"/mandaresetPassword": {
+      "post": {
+        "summary": "Inicia o processo de redefinição de senha",
+        "description": "Recebe o e-mail do usuário e envia instruções para redefinição de senha. Não requer autenticação.",
+        "tags": [
+          "Autenticação"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "O e-mail do usuário que deseja redefinir a senha.",
+                    "example": "usuario@example.com"
+                  }
+                },
+                "required": [
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "E-mail enviado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Mensagem de sucesso.",
+                      "example": "Instruções de redefinição de senha enviadas com sucesso."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Solicitação inválida. O e-mail fornecido é inválido."
+        },
+        "404": {
+          "description": "Usuário não encontrado. O e-mail fornecido não está associado a nenhuma conta."
+        },
+        "500": {
+          "description": "Erro no servidor ao tentar iniciar o processo de redefinição de senha."
+        }
+      }
+    },

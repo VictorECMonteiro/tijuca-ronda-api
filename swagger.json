@@ -1,0 +1,694 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Documentação API Tijuca Ronda",
+    "description": "Documentação da API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://192.168.9.247:9010"
+    }
+  ],
+  "paths": {
+    "/login/loginHandle": {
+      "post": {
+        "description": "Rota de login da API (Modifique com os seus dados de usuário)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cpf": {
+                    "type": "string",
+                    "description": "Insira seu CPF",
+                    "example": "00000000000"
+                  },
+                  "senhadeUsuario": {
+                    "type": "string",
+                    "description": "Insira sua senha",
+                    "example": "MinhaSenhaDeUsuario"
+                  }
+                },
+                "required": ["cpf"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Usuario ou Senha Incorreto, ou informações não preenchidas na requisição"
+          }
+        }
+      }
+    },
+    "/login/create": {
+      "post": {
+        "description": "Criar novos usuários (Se é necessário ser administrador e que preencha o campo de token com o valor fornecido no momento do login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cpf": {
+                    "type": "string",
+                    "description": "Criação de novos usuários",
+                    "example": "00000000000"
+                  },
+                  "nomedeUsuario": {
+                    "type": "string",
+                    "description": "Nome do usuário a ser criado",
+                    "example": "Livia"
+                  },
+                  "senhadeUsuario": {
+                    "type": "string",
+                    "description": "Senha do usuário a ser criado",
+                    "example": "senhaQueOUsuarioVaiUSar"
+                  },
+                  "permissao": {
+                    "type": "string",
+                    "description": "Nivel de permissão que o usuário terá no sistema",
+                    "example": "vigia"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-auth-token",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Token de autorização",
+              "example": "19ifa9ddaaf0f9aws842142das1331"
+            }
+          },
+          {
+            "in": "header",
+            "name": "permissao",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Nivel de permissão",
+              "example": "admin"
+            }
+          }
+        ],
+        "responses": {
+          "200": "Usuario Criado com Sucesso"
+        }
+      }
+    },
+    "/login/listUsers": {
+      "get": {
+        "description": "Rota para resgatar a lista de todos os usuários do sistema",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-auth-token",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Token de autorização",
+              "example": "faiosudiashuodha8092902313nua"
+            }
+          },
+          {
+            "in": "header",
+            "name": "permissao",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Nivel de permissão",
+              "example": "admin"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuarios Retornados com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "ID do usuário"
+                      },
+                      "nome": {
+                        "type": "string",
+                        "description": "Nome do usuário"
+                      },
+                      "email": {
+                        "type": "string",
+                        "description": "Email do usuário"
+                      }
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "idUsuario": 1,
+                    "cpf": "12345678901",
+                    "nomedeUsuario": "usuarioteste",
+                    "senhadeUsuario": "$2b$10$GJe5Mnnn1n9yjiNgL4124deZc4fa25EUdb6FQ.eobX/qRypMy4Jzge",
+                    "permissao": "vigia",
+                    "status": 1
+                  },
+                  {
+                    "idUsuario": 2,
+                    "cpf": "12345678901",
+                    "nomedeUsuario": "victor",
+                    "senhadeUsuario": "$2b$10$oHbKzrWLhctuYz2xM1Yfz.aVWpqowlakdniopU5jBiIL.WB7JhFA98Zm",
+                    "permissao": "admin",
+                    "status": 1
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login/modify": {
+      "post": {
+        "description": "Rota de modificação de senha de usuario",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idUsuario": {
+                    "type": "int",
+                    "description": "Insira o ID",
+                    "example": "1"
+                  },
+                  "senhadeUsuarioAtual": {
+                    "type": "string",
+                    "description": "Insira sua senha de usuario atual",
+                    "example": "usuario123"
+                  },
+                  "senhadeUsuarioNova": {
+                    "type": "string",
+                    "description": "Insira sua senha",
+                    "example": "usuario246"
+                  }
+                },
+                "required": [
+                  "idUsuario",
+                  "senhadeUsuarioAtual",
+                  "senhadeUsuarioNova"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Usuario ou Senha Incorreto, ou informações não preenchidas na requisição"
+          }
+        }
+      }
+    },
+    "/login/deactivate": {
+      "post": {
+        "description": "Rota para 'excluir' usuario do sistema",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idUsuario": {
+                    "type": "int",
+                    "description": "Insira o ID",
+                    "example": "1"
+                  }
+                },
+                "required": ["idUsuario"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Usuario ou Senha Incorreto, ou informações não preenchidas na requisição"
+          }
+        }
+      }
+    },
+    "/login/token": {
+      "post": {
+        "description": "Rota para verificar se o token ainda é válido",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-auth-token",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Token de autorização",
+              "example": "djasiosjiodjo22e2231edndkjan"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token de autorização válido"
+          },
+          "401": {
+            "description": "Token invalido ou expirado"
+          }
+        }
+      }
+    },
+    "/rota/create": {
+      "post": {
+        "description": "Criação de rotas",
+        "requestBody": {
+          "requires": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nomeRota": {
+                    "type": "string",
+                    "description": "Nome da Rota a ser seguida",
+                    "example": "Rota Noturna"
+                  },
+                  "horarioInicio": {
+                    "type": "string",
+                    "description": "Horario que a rota deverá ser iniciada",
+                    "example": "13:00"
+                  },
+                  "idLocal": {
+                    "type": "array",
+                    "description": "Array de locais a serem adicionados na rota (É necessário que esses locais já tenham sido criados",
+                    "example": "[1,2]"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuarios Retornados com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rota/delete": {
+      "post": {
+        "description": "Criação de rotas",
+        "requestBody": {
+          "requires": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idRota": {
+                    "type": "integer",
+                    "description": "ID da rota a ser excluida",
+                    "example": "2"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rota excluida com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rota/list": {
+      "get": {
+        "description": "Lista as rotas existentes",
+        "responses": {
+          "200": {
+            "description": "Rotas retornadas com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ronda/createAndReturn": {
+      "get": {
+        "description": "Retornar as rondas, e caso nao tenha sido criado rondas no dia, já as cria automaticamente",
+        "responses": {
+          "200": {
+            "description": "Rondas criadas e retornadas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ronda/begin": {
+      "post": {
+        "description": "Inicia a ronda com o ID fornecido",
+        "requestBody": {
+          "requires": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idRonda": {
+                    "type": "integer",
+                    "description": "ID da ronda a ser iniciada",
+                    "example": "1"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A ronda foi iniciada com sucesso"
+          },
+          "400": {
+            "description": "Ronda já iniciada ou inexistente"
+          }
+        }
+      }
+    },
+    "/ronda/stop": {
+      "post": {
+        "description": "Rota para encerrar a ronda",
+        "requestBody": {
+          "requires": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idRonda": {
+                    "type": "integer",
+                    "description": "ID da ronda a ser encerrada",
+                    "example": "1"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ronda encerrada com sucesso"
+          },
+          "400": {
+            "description": "Ronda ja encerrada ou Inexistente"
+          }
+        }
+      }
+    },
+    "/ronda/search": {
+      "post": {
+        "description": "Rota para encerrar a ronda",
+        "requestBody": {
+          "requires": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nomeRota": {
+                    "type": "string",
+                    "description": "Nome da rota a ser pesquisa",
+                    "example": "Rota Vespertina"
+                  },
+                  "data": {
+                    "type": "string",
+                    "description": "Data da ronda",
+                    "example": "2024-10-2"
+                  },
+                  "idUsuario": {
+                    "type": "integer",
+                    "description": "Id do usuario a ser pesquisados nas rondas",
+                    "example": "2"
+                  },
+                  "idRota": {
+                    "type": "integer",
+                    "description": "Id da rota a ser pesquisada",
+                    "example": "1"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ronda encerrada com sucesso"
+          },
+          "400": {
+            "description": "Ronda ja encerrada ou Inexistente"
+          }
+        }
+      }
+    },
+    "/ronda/listLocals": {
+      "get": {
+        "description": "Retorna os locais de ronda ja visitados",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "idRonda",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "description": "ID da ronda",
+              "example": "10"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna os locais de ronda já visitados, ou que necessitam ser visitados"
+          },
+          "400": {
+            "description": "Ronda inexistente no banco de dados"
+          }
+        }
+      }
+    },
+
+    "/local/list": {
+      "get": {
+        "description": "Rota para resgatar a lista de todos os usuários do sistema",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-auth-token",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Token de autorização",
+              "example": "faiosudiashuodha8092902313nua"
+            }
+          },
+          {
+            "in": "header",
+            "name": "permissao",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Nivel de permissão",
+              "example": "admin"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuarios Retornados com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "idLocal": {
+                        "type": "integer",
+                        "description": "ID do local"
+                      },
+                      "nomeLocal": {
+                        "type": "string",
+                        "description": "Nome do usuário"
+                      }
+                    }
+                  }
+                },
+                "example": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "/local/create": {
+      "post": {
+        "description": "Rota para criar um local",
+        "requestBody": {
+          "requires": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nomeLocal": {
+                    "type": "string",
+                    "description": "Nome do local a ser criado",
+                    "example": "Pátio"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ronda encerrada com sucesso"
+          },
+          "400": {
+            "description": "Ronda ja encerrada ou Inexistente"
+          }
+        }
+      }
+    },
+    "/local/delete": {
+      "post": {
+        "description": "Rota para excluir um local",
+        "requestBody": {
+          "requires": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idLocal": {
+                    "type": "int",
+                    "description": "ID do local a ser excluido",
+                    "example": "1"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Local excluido com sucesso"
+          },
+          "400": {
+            "description": "Erro ao excluir o local"
+          }
+        }
+      }
+    },
+    "/geral/createLog": {
+      "post": {
+        "description": "Rota para criar log de vistoria",
+        "requestBody": {
+          "requires": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idLocal": {
+                    "type": "integer",
+                    "description": "ID do local escaneado",
+                    "example": "1"
+                  },
+                  "idRonda": {
+                    "type": "integer",
+                    "description": "ID da ronda em andamento",
+                    "example": "1"
+                  },
+                  "idUsuario": {
+                    "type": "integer",
+                    "description": "ID do usuario realizando a ronda",
+                    "example": "1"
+                  },
+                  "latitude": {
+                    "type": "string",
+                    "description": "latitude do local",
+                    "example": "1"
+                  },
+                  "longitude": {
+                    "type": "string",
+                    "description": "longitude do local",
+                    "example": "1"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Log criado com sucesso"
+          },
+          "400": {
+            "description": "Erro ao excluir log"
+          }
+        }
+      }
+    }
+  }
+}

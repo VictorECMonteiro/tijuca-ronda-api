@@ -1,0 +1,39 @@
+//Imports
+const express = require("express");
+const app = express();
+require("dotenv").config();
+const Loginrouter = require("./src/routes/loginRoutes");
+const rondaRouter = require("./src/routes/rondaRoutes");
+const rotaRouter = require("./src/routes/rotaRoutes");
+const localRouter = require("./src/routes/localRoutes");
+const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+const config = require("./swagger.json");
+const cors = require("cors");
+const geralRouter = require("./src/routes/geralRoutes");
+//
+//Configurações
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
+app.use(cors());
+//
+
+//Caso for Usar cookies, colocar diretamente o IP da maquina, se não, só o / já abrange tudo
+// app.use(cors({
+//   origin: '/',
+//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+// }))
+
+//Declaração de grupo de rotas
+app.get("/", (req, res) => {
+  res.send("Esta é a API do projeto: Tijuca Ronda");
+});
+app.use("/doc", swaggerUi.serve, swaggerUi.setup(config));
+app.use("/login", Loginrouter);
+app.use("/ronda", rondaRouter);
+app.use("/rota", rotaRouter);
+app.use("/local", localRouter);
+app.use("/geral", geralRouter);
+app.listen(process.env.portaApi);
+
+//API TIJUCA RONDAS 2025
