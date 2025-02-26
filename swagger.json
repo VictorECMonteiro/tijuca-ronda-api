@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://192.168.9.247:9010"
+      "url": "http://192.168.9.249:9010"
     }
   ],
   "paths": {
@@ -105,7 +105,15 @@
           }
         ],
         "responses": {
-          "200": "Usuario Criado com Sucesso"
+          "200": {
+            "description": "Usuário criado com sucesso"
+          },
+          "400": {
+            "description": "Erro na requisição, verifique as informações"
+          },
+          "401": {
+            "description": "Erro na requisição, verifique as informações"
+          }
         }
       }
     },
@@ -220,7 +228,7 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Senha de usuario modificada com sucesso"
           },
           "400": {
             "description": "Usuario ou Senha Incorreto, ou informações não preenchidas na requisição"
@@ -251,7 +259,7 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Status de usuário modificado com sucesso"
           },
           "400": {
             "description": "Usuario ou Senha Incorreto, ou informações não preenchidas na requisição"
@@ -316,7 +324,7 @@
         },
         "responses": {
           "200": {
-            "description": "Usuarios Retornados com sucesso",
+            "description": "Rota criada com sucesso",
             "content": {
               "application/json": {
                 "schema": {
@@ -458,7 +466,7 @@
     },
     "/ronda/search": {
       "post": {
-        "description": "Rota para encerrar a ronda",
+        "description": "Rota para pesquisa de ronda com base nos parametros fornecidos",
         "requestBody": {
           "requires": true,
           "content": {
@@ -493,10 +501,10 @@
         },
         "responses": {
           "200": {
-            "description": "Ronda encerrada com sucesso"
+            "description": "Ronda encontrada"
           },
           "400": {
-            "description": "Ronda ja encerrada ou Inexistente"
+            "description": "Ronda não encontrada ou inexistente"
           }
         }
       }
@@ -602,10 +610,10 @@
         },
         "responses": {
           "200": {
-            "description": "Ronda encerrada com sucesso"
+            "description": "Local criado com sucesso"
           },
           "400": {
-            "description": "Ronda ja encerrada ou Inexistente"
+            "description": "Erro ao criar local"
           }
         }
       }

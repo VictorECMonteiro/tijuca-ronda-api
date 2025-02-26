@@ -3,11 +3,12 @@ const rotaQueries = require("../repositories/rotaReposity.js");
 class rotaService {
   rotaQueriesl = new rotaQueries();
 
-  async createService(nomeRota, horarioInicio, idLocal) {
+  async createService(nomeRota, horarioInicio, idLocal, horarioLocais) {
     const fresult = await this.rotaQueriesl.createRota(
       nomeRota,
       horarioInicio,
-      idLocal
+      idLocal,
+      horarioLocais
     );
     return fresult;
   }

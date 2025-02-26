@@ -39,7 +39,7 @@ class rondaQueries {
       return { success: false };
     }
   }
-
+  //REFAZER
   async rondaCriar(nowDate) {
     try {
       const rotas = await registroRota.findAll();
@@ -117,6 +117,9 @@ class rondaQueries {
         }
       );
       const rondaAtualFlat = rondaAtual.flat();
+
+
+      //MODIFICAR
       if (rondaAtualFlat[0].idUsuario) {
         return false;
       } else {
@@ -124,7 +127,9 @@ class rondaQueries {
           retornaHorasComTolerancia(retornaHoras(), 20),
           rondaAtualFlat[0].horarioInicio
         );
+      //
 
+      //Modificar
         if (compareHour == true) {
           await registroRonda.update(
             {
@@ -153,11 +158,13 @@ class rondaQueries {
         }
         // console.log(rondaAtualFlat[0]);
       }
+      //MODIFICAR RETORNO
       return true;
     } catch (e) {
       console.log(e);
     }
   }
+  //REFAZER
   async encerraRonda(idRonda) {
     try {
       const rondaAtual = await sequelize.sequelize.query(
@@ -210,17 +217,16 @@ class rondaQueries {
       console.log(e);
     }
   }
-
+  //MANTER, SO ADICIONAR IDUSUARIO NA QUERY DE RETORNO
   async retornaLocaisVisitados(idRonda) {
     const localFinded = await sequelize.sequelize.query(
       `
-     SELECT l.nomeLocal, g.hora,
-     CASE WHEN g.idRonda IS NOT NULL AND g.idLocal = l.idLocal THEN g.idRonda ELSE null END AS idRonda 
-     FROM rondas 
-     LEFT JOIN rotas as r on r.idRota = rondas.idRota 
-     LEFT JOIN locais as l on r.idLocal = l.idLocal 
-     LEFT JOIN gerais as g on g.idRonda = rondas.idRonda 
-     WHERE rondas.idRonda = :idRonda;`,
+
+      SELECT distinct t3.nomeLocal, t4.idRonda, t4.hora from rondas as t1
+      LEFT JOIN rotas as t2 on t1.idRota = t2.idRota
+      LEFT JOIN locais as t3 on t2.idLocal = t3.idLocal
+      LEFT JOIN gerais as t4 on t4.idRonda = t1.idRonda AND t4.idLocal = t3.idLocal
+      where t1.idRonda = :idRonda;`,
       {
         replacements: {
           idRonda: idRonda,

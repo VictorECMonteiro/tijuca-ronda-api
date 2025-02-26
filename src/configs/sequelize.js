@@ -1,6 +1,6 @@
 const Sequelize = require("sequelize");
 require("dotenv").config();
-const sequelize = new Sequelize("tijucaronda", "root", "", {
+const sequelize = new Sequelize("tijucaronda2", "root", process.env.dbKey, {
   timezone: "-03:00",
   host: "localhost",
   dialect: "mysql",

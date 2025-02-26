@@ -6,10 +6,11 @@ const rotaCreateController = async (req, res, next) => {
   const fresult = await rotaService.createService(
     req.body.nomeRota,
     req.body.horarioInicio,
-    req.body.idLocal
+    req.body.idLocal,
+    req.body.horarioLocais,
   );
 
-  fresult
+  fresult === true
     ? res.status(200).send({ success: true, msg: "Rota criada com sucesso" })
     : res
         .status(400)

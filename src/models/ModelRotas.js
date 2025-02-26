@@ -1,13 +1,13 @@
 const database = require("../configs/sequelize.js");
-const Geral = require("./modelGerais.js");
+// const Geral = require("./modelGerais.js");
 const Rondas = require("./ModelRondas.js");
-
+const modelRotas_Locais = require("./modelRotas_Locais.js")
 const Rotas = database.sequelize.define("rotas", {
   idRota: {
     type: database.Sequelize.INTEGER,
     allowNull: false,
-    primaryKey: false, // Adicionado para garantir que a chave primária está correta
-    autoIncrement: false, // Se for o caso de ser auto-increment
+    primaryKey: true, // Adicionado para garantir que a chave primária está correta
+    autoIncrement: true, // Se for o caso de ser auto-increment
   },
   nomeRota: {
     type: database.Sequelize.STRING,
@@ -16,7 +16,10 @@ const Rotas = database.sequelize.define("rotas", {
   horarioInicio: {
     type: database.Sequelize.STRING,
     allowNull: false,
-  },
+  }
 });
+
+// Rotas.hasMany(Rondas, {foreignKey: "idRota"})
+Rotas.hasMany(modelRotas_Locais, {foreignKey: "idRota"})
 
 module.exports = Rotas;

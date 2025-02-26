@@ -17,7 +17,7 @@ const loginControllerHandleCreator = async (req, res, next) => {
     req.body.cpf
   );
   //Responde a requisição com base na resposta do service
-  fresult
+  fresult == true
     ? res.send({ success: true, err: 1, msg: "Login criado com sucesso" })
     : res.send({
         success: false,
@@ -55,6 +55,7 @@ const loginControllerGetUsers = async (req, res, next) => {
   res.status(200).send(fresult);
 };
 const verifyToken = async (req, res, next) => {
+  console.log("TOKEN VERIFICADO")
   res.status(200).send({
     success: true,
   });
