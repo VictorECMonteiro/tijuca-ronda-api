@@ -25,7 +25,9 @@ const rondaIniciarController = async (req, res, next) => {
 const rondaStopController = async (req, res, next) => {
   const dados = req.body;
 
-  const fresult = await rondaService.pararRonda(dados.idRonda);
+  const fresult = await rondaService.pararRonda(
+    dados
+  );
 
   if (fresult) {
     res.status(200).send({
@@ -35,7 +37,7 @@ const rondaStopController = async (req, res, next) => {
   } else {
     res.status(400).send({
       success: false,
-      msg: "Ronda já encerrada",
+      msg: "Ronda já encerrada ou erro desconhecido",
     });
   }
 };

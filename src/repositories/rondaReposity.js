@@ -154,7 +154,7 @@ class rondaQueries {
 
 
   //REFAZER
-  async encerraRonda(idRonda) {
+  async encerraRonda(data) {
     try {
       const rondaAtual = await sequelize.sequelize.query(
         `select * from rondas as r
@@ -246,7 +246,7 @@ class rondaQueries {
       console.log(e);
     }
   }
-  
+
   async rondaSearchLogs(idRonda) {
     try {
       const logs = await sequelize.sequelize.query(

@@ -21,10 +21,10 @@ class rondaService {
     }
   }
 
-  async pararRonda(idRonda) {
+  async pararRonda(data) {
     console.log(idRonda);
     try {
-      const fresult = await this.rondaQueriesL.encerraRonda(idRonda);
+      const fresult = await this.rondaQueriesL.encerraRonda(data);
       return fresult;
     } catch (e) {}
   }
