@@ -10,14 +10,10 @@ const rondaCreateAndReturnController = async (req, res, next) => {
 const rondaIniciarController = async (req, res, next) => {
   const dados = req.body;
   const fresult = await rondaService.iniciarRonda(
-    dados.idUsuario,
     dados.idRonda
   );
   if (fresult) {
-    res.status(200).send({
-      success: true,
-      msg: "Ronda Iniciada com Sucesso",
-    });
+    res.status(200).send(fresult);
   } else {
     res.status(400).send({
       success: false,

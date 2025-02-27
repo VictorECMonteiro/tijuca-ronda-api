@@ -14,11 +14,11 @@ var Ronda = database.sequelize.define("rondas", {
   },
   horaInicio: {
     type: database.Sequelize.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   horaFim: {
     type: database.Sequelize.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   data: {
     type: database.Sequelize.STRING,
@@ -26,6 +26,10 @@ var Ronda = database.sequelize.define("rondas", {
   },
   observacao: {
     type: database.Sequelize.STRING,
+  },
+  status:{
+    type: database.Sequelize.INTEGER,
+
   }
 });
 
@@ -33,5 +37,6 @@ var Ronda = database.sequelize.define("rondas", {
 Ronda.hasMany(Geral, { foreignKey: "idRonda"});
 Ronda.belongsTo(Rotas, {constraint: true, foreignKey: "idRota"});
 
+// Ronda.sync()
 
 module.exports = Ronda;

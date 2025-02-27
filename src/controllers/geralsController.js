@@ -1,6 +1,6 @@
 const Service = require("../services/geralsService.js");
-require("dotenv").config();
 const geralsService = new Service();
+require("dotenv").config();
 
 const writeLogController = async (req, res) => {
   const dados = req.body;

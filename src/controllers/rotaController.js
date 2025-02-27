@@ -8,6 +8,7 @@ const rotaCreateController = async (req, res, next) => {
     req.body.horarioInicio,
     req.body.idLocal,
     req.body.horarioLocais,
+    req.body.idUsuario
   );
 
   fresult === true

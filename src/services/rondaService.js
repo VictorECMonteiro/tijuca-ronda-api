@@ -11,9 +11,9 @@ class rondaService {
       return fresult;
     } catch (e) {}
   }
-  async iniciarRonda(idUsuario, idRonda) {
+  async iniciarRonda(idRonda) {
     try {
-      const fresult = await this.rondaQueriesL.iniciarRonda(idUsuario, idRonda);
+      const fresult = await this.rondaQueriesL.iniciarRonda(idRonda);
       return fresult;
     } catch (E) {
       console.log(E);

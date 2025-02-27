@@ -311,11 +311,23 @@
                     "type": "string",
                     "description": "Horario que a rota deverá ser iniciada",
                     "example": "13:00"
+                  }
+                  ,
+                  "idUsuario": {
+                    "type": "integer",
+                    "description": "ID do usuario a ser atribuído a rota",
+                    "example": "1"
                   },
                   "idLocal": {
                     "type": "array",
                     "description": "Array de locais a serem adicionados na rota (É necessário que esses locais já tenham sido criados",
                     "example": "[1,2]"
+                  },
+                  "horarioLocais":{
+                    "type": "array",
+                    "description": "Array de horários a ser adicionado no local, cada item deve ser uma string",
+                    "example":"[13:00, 14:00]"
+
                   }
                 }
               }
@@ -325,6 +337,16 @@
         "responses": {
           "200": {
             "description": "Rota criada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro ao criar rota, recomendado verificar as informações do payload",
             "content": {
               "application/json": {
                 "schema": {

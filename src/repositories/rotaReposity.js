@@ -4,12 +4,12 @@ const registroLocal = require("../models/modelLocais");
 const registroRotas_Locais = require("../models/modelRotas_Locais")
 const sequelize = require("../configs/sequelize");
 const verificarItensRepetidos = require("../utils/verificarItemRepetido");
-const { where } = require("sequelize");
+// const { where } = require("sequelize");
 
 class rotaQueries {
   constructor() {}
 
-  async createRota(nomeRota, horarioInicio, idLocal, horarioLocais) {
+  async createRota(nomeRota, horarioInicio, idLocal, horarioLocais, idUsuario) {
     try {
       //Valida se o array de locais tem itens repetidos
       const validator = verificarItensRepetidos(idLocal);
@@ -19,6 +19,7 @@ class rotaQueries {
       const rotaCriada = await registroRota.create({
           nomeRota: nomeRota, 
           horarioInicio: horarioInicio,
+          idUsuario: idUsuario
       })
       console.log(rotaCriada)
       if (!validator && !lengthValidator) {

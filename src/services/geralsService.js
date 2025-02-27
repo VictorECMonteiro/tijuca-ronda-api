@@ -1,11 +1,11 @@
 const geralsQueries = require("../repositories/geralReposity.js");
 
 class geralsService {
-  geralQuery = new geralsQueries();
+  
   constructor() {}
 
   writeLog = async (idUsuario, idRonda, latitude, longitude, idLocal) => {
-    const result = await this.geralQuery.writeLog(
+    const result = await geralsQueries().writeLog(
       idUsuario,
       idRonda,
       latitude,
@@ -15,7 +15,7 @@ class geralsService {
     return result;
   };
   searchReturn = async (idRonda) => {
-    const fresult = await this.geralQuery.searchLog(idRonda);
+    const fresult = await geralsQueries().searchLog(idRonda);
     return fresult;
   };
 }

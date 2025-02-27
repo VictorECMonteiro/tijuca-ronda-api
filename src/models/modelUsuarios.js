@@ -1,6 +1,7 @@
 const database = require("../configs/sequelize.js");
 const Geral = require("./modelGerais.js");
 const Ronda = require("./ModelRondas.js");
+const Rota = require("./ModelRotas.js")
 
 const Usuarios = database.sequelize.define("usuarios", {
   idUsuario: {
@@ -32,6 +33,8 @@ const Usuarios = database.sequelize.define("usuarios", {
   },
 });
 
+
+Usuarios.hasMany(Rota, {foreignKey: "idUsuario"})
 Usuarios.hasMany(Geral, { foreignKey: "idUsuario" });
 Usuarios.hasMany(Ronda, { foreignKey: "idUsuario" });
 
