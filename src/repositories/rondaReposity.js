@@ -10,15 +10,15 @@ const retornaHorasComTolerancia = require("../utils/retornaHorasComTolerancia");
 let logClass = require("./geralReposity").geral
 require("dotenv").config();
 
-const dumbData = {
-  idRonda: 3,
-  idUsuario: 1,
-  horario: ["13:00", "13:00"],
-  locais:  [1, 2],
-  locaisVisitados: [1,2],
-  latitude: [-3.8565266, -3.8565266],
-  longitude: [-38.5100779, -38.5100779]
-}
+// const dumbData = {
+//   idRonda: 3,
+//   idUsuario: 1,
+//   horario: ["13:00", "13:00"],
+//   locais:  [1, 2],
+//   locaisVisitados: [1,2],
+//   latitude: [-3.8565266, -3.8565266],
+//   longitude: [-38.5100779, -38.5100779]
+// }
 
 //CLASS RONDAS: INTERAÇÂO E OPERAÇÔES COM TABELA RONDAS NO SQL
 class rondaQueries {
@@ -162,7 +162,7 @@ class rondaQueries {
          WHERE r.idRonda = :idRonda`,
         {
           replacements: {
-            idRonda: dumbData.idRonda,
+            idRonda: data.idRonda,
           },
           type: sequelize.Sequelize.QueryTypes.SELECT
         }
@@ -174,8 +174,8 @@ class rondaQueries {
 
 
 
-      for(let i=0; i<= dumbData.locaisVisitados.length - 1; i++){
-        await logClass.writeLog(dumbData.idUsuario, dumbData.idRonda,dumbData.latitude[i], dumbData.longitude[i], dumbData.locais[i], dumbData.horario[i], rondaAtual[0].idRota)
+      for(let i=0; i<= data.locaisVisitados.length - 1; i++){
+        await logClass.writeLog(data.idUsuario, data.idRonda,data.latitude[i], data.longitude[i], data.locais[i], data.horario[i], rondaAtual[0].idRota)
       }
       const compareHour = compararHora(
         retornaHoras(),
@@ -190,7 +190,7 @@ class rondaQueries {
           },
           {
             where: {
-              idRonda: dumbData.idRonda,
+              idRonda: data.idRonda,
             },
           }
         );
@@ -202,7 +202,7 @@ class rondaQueries {
           },
           {
             where: {
-              idRonda: dumbData.idRonda,
+              idRonda: data.idRonda,
             },
           }
         );
