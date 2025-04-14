@@ -43,9 +43,9 @@ const rondaStopController = async (req, res, next) => {
 };
 const rondaReturnLocalsController = async (req, res) => {
   const dados = req.query;
-  console.log(req.query);
+  // console.log(req.query);
   const fresult = await rondaService.retornaLocaisVisitados(dados.idRonda);
-  console.log(fresult);
+  // console.log(fresult);
   if (fresult.length == 0 || undefined) {
     res.status(400).send({ success: false });
   } else {
@@ -55,12 +55,14 @@ const rondaReturnLocalsController = async (req, res) => {
 const rondaSearchController = async (req, res) => {
   const dados = req.body;
   const fresult = await rondaService.rondaSearch(dados);
-  console.log(fresult);
+  // console.log(fresult);
   fresult.length == 0
     ? res.status(400).send({ success: false })
     : res.status(200).send(fresult);
 };
 const rondaSearchLogsController = async (req, res) => {
+  // res.send("TESTE")
+  // console.log("FUI CHAMADO")
   const dados = req.body;
   const fresult = await rondaService.rondaSearchLogs(dados.idRonda);
   fresult.length === 0

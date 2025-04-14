@@ -65,8 +65,6 @@ const geralFactory = {
   get geral(){
     return new geral()
   }
-
-
 }
 
 

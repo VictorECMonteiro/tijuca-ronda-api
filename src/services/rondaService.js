@@ -22,11 +22,13 @@ class rondaService {
   }
 
   async pararRonda(data) {
-    console.log(idRonda);
+    // console.log(idRonda);
     try {
       const fresult = await this.rondaQueriesL.encerraRonda(data);
       return fresult;
-    } catch (e) {}
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   async retornaLocaisVisitados(idRonda) {

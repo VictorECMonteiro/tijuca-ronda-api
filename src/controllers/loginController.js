@@ -57,7 +57,7 @@ const loginControllerGetUsers = async (req, res, next) => {
 const verifyToken = async (req, res, next) => {
   console.log("TOKEN VERIFICADO")
   res.status(200).send({
-    success: true,
+    success: true,  
   });
 };
 const loginControllerModify = async (req, res, next) => {

@@ -19,4 +19,7 @@ router.post("/stop", rondaController.rondaStopController);
 
 router.post("/search", rondaController.rondaSearchController);
 
+router.post("/rondaSearch", rondaController.rondaSearchLogsController);
+
+
 module.exports = router;

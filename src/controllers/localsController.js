@@ -3,7 +3,7 @@ require("dotenv").config();
 const localService = new Service();
 
 const localCreateController = async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const fresult = await localService.localCreate(req.body.nomeLocal);
 
   if (fresult) {
