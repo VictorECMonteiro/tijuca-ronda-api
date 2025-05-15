@@ -76,7 +76,7 @@ const loginControllerModify = async (req, res, next) => {
 };
 const loginControllerDeactivate = async (req, res) => {
   const dados = req.body;
-  const fresult = await this.loginService.deactivateService(dados.idUsuario);
+  const fresult = await loginService.deactivateService(dados.idUsuario);
   fresult
     ? res
         .status(200)

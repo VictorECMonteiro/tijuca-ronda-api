@@ -21,5 +21,7 @@ router.post("/search", rondaController.rondaSearchController);
 
 router.post("/rondaSearch", rondaController.rondaSearchLogsController);
 
+router.get("/findAll", rondaController.rondaFindAllController);
+
 
 module.exports = router;

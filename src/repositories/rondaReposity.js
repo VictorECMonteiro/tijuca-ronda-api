@@ -9,7 +9,8 @@ const date = require("../utils/date");
 const retornaHoras = require("../utils/retornaHoras");
 const retornaHorasComTolerancia = require("../utils/retornaHorasComTolerancia");
 const Rotas_Locais = require("../models/modelRotas_Locais");
-let logClass = require("./geralReposity").geral;
+let logClassInstance = require("./geralReposity");
+let logClass = new logClassInstance()
 require("dotenv").config();
 
 // const dumbData = {
@@ -333,6 +334,20 @@ class rondaQueries {
     } catch (e) {
       return [];
     }
+  }
+  async returnAll(){
+    try{
+        const findAll = await registroRonda.findAll()
+        return findAll;
+    }
+    catch(e){
+      return []
+    }
+
+
+
+
+    
   }
 }
 

@@ -327,8 +327,7 @@
                     "type": "array",
                     "description": "Array de horários a ser adicionado no local, cada item deve ser uma string",
                     "example":"[13:00, 14:00]"
-
-                  }
+                  } 
                 }
               }
             }

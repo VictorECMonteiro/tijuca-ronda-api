@@ -49,5 +49,10 @@ class rondaService {
     const fresult = await this.rondaQueriesL.rondaSearchLogs(idRonda);
     return fresult;
   }
+
+  async rondaFindAll(){
+    const fresult = await this.rondaQueriesL.returnAll();
+    return fresult;
+  }
 }
 module.exports = rondaService;

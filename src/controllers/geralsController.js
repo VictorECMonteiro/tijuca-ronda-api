@@ -19,7 +19,16 @@ const writeLogController = async (req, res) => {
 const searchLogController = async (req, res) => {
   const dados = req.body;
   const fresult = await geralsService.searchReturn(dados.idRonda);
-  return fresult;
+  fresult.length === 0?res.status(400).send({success: false}):res.status(200).send(fresult)
+  
 };
+const logDataController = async(req,res)=>{
+  const dados = req.body;
+  const fresult = await geralsService.logDataService(dados.idRonda);
+  fresult.length === 0?res.status(400).send({success: false}):res.status(200).send(fresult)
 
-module.exports = { writeLogController, searchLogController };
+}
+
+
+module.exports = { writeLogController, searchLogController, logDataController};
+
