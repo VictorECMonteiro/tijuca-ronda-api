@@ -1,8 +1,9 @@
 const database = require("../configs/sequelize.js");
 // const Geral = require("./modelGerais.js");
-const Rondas = require("./ModelRondas.js");
+const Rondas = require("./modelRondas.js");
 const modelRotas_Locais = require("./modelRotas_Locais.js")
 const Usuarios = require("./modelUsuarios.js")
+const Rota_User = require("./modelRota_User.js")
 
 
 
@@ -25,6 +26,7 @@ const Rotas = database.sequelize.define("rotas", {
 
 // Rotas.hasMany(Rondas, {foreignKey: "idRota"})
 Rotas.hasMany(modelRotas_Locais, {foreignKey: "idRota"})
+Rotas.hasMany(Rota_User, {foreignKey: "idRota"})
 // Rotas.hasMany(Usuarios, { foreignKey: "idUsuario", constraint: true})
 
 module.exports = Rotas;

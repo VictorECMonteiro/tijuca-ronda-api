@@ -1,7 +1,7 @@
 const { where } = require("sequelize");
 const sequelize = require("../configs/sequelize");
-const registroRonda = require("../models/ModelRondas");
-const registroRota = require("../models/ModelRotas");
+const registroRonda = require("../models/modelRondas");
+const registroRota = require("../models/modelRotas");
 const registroLocal = require("../models/modelLocais");
 const registroRotaLocal = require("../models/modelRotas_Locais");
 const compararHora = require("../utils/compararHora");
@@ -10,7 +10,7 @@ const retornaHoras = require("../utils/retornaHoras");
 const retornaHorasComTolerancia = require("../utils/retornaHorasComTolerancia");
 const Rotas_Locais = require("../models/modelRotas_Locais");
 let logClassInstance = require("./geralReposity");
-let logClass = new logClassInstance()
+
 require("dotenv").config();
 
 // const dumbData = {
@@ -76,7 +76,7 @@ class rondaQueries {
           fresposta.push({
             ...resposta[i].dataValues, // Keep original response data
             retrievingLocals,
-            retrievingRoute, // Add retrieved data
+            retrievingRoute, 
           });
         }
 
@@ -91,19 +91,26 @@ class rondaQueries {
   //REFAZER
   async rondaCriar() {
     try {
-      const rotas = await registroRota.findAll();
+      // const rotas = await registroRota.findAll();
+
+      let rotas = await sequelize.sequelize.query(`
+        SELECT rotas.*, ru.idUsuario from rotas
+        LEFT JOIN rota_users as ru on rotas.idRota = ru.idRota;`, {type: sequelize.Sequelize.QueryTypes.SELECT})
 
       if (rotas.length === 0) {
         return false;
       }
+      console.log(rotas)
 
       for (let i = 0; i <= rotas.length - 1; i++) {
         await registroRonda.create({
-          nomeRota: rotas[i].dataValues.nomeRota,
+          nomeRota: rotas[i].nomeRota,
           data: date(),
-          idRota: rotas[i].dataValues.idRota,
-          idUsuario: rotas[i].dataValues.idUsuario,
+          idRota: rotas[i].idRota,
+          idUsuario: rotas[i].idUsuario,
           status: 0,
+        }, {
+          
         });
       }
 
@@ -197,8 +204,8 @@ class rondaQueries {
 
   //REFAZER
   async encerraRonda(data) {
+    let logClass = new logClassInstance()
     let horarioAtual = retornaHoras()
-
     try {
       const rondaAtual = await sequelize.sequelize.query(
         `select * from rondas as r
@@ -217,7 +224,7 @@ class rondaQueries {
       }
       
       for (let i = 0; i <= data.locaisVisitados.length - 1; i++) {
-        await logClass.writeLog(
+        await logClass.writeLog( 
           rondaAtual[0].idUsuario,
           data.idRonda,
           data.latitude[i],
@@ -258,6 +265,7 @@ class rondaQueries {
           }
         );
       }
+      logClass = null
       return true;
     } catch (e) {
       console.log(e);
@@ -283,7 +291,8 @@ class rondaQueries {
 
     return localFinded.flat();
   }
-  async rondaSearch(dados) {
+
+  async pesquisarRonda(dados) {
     try {
       var json = {};
       for (let key in dados) {
@@ -298,7 +307,7 @@ class rondaQueries {
     }
   }
 
-  async rondaSearchLogs(idRonda) {
+  async pesquisarRondaLogs(idRonda) {
     try {
       let fresposta = [];
       const resposta = await registroRonda.findOne({
@@ -343,12 +352,27 @@ class rondaQueries {
     catch(e){
       return []
     }
-
-
-
-
-    
   }
+  async desfazerRota(idRonda){
+    try{
+      await registroRonda.update({
+        status: 0
+      },{
+        where:{
+          idRonda: idRonda
+        }
+      })
+      return true
+    }
+    catch(e){
+      return false
+    }
+  }
+
+
+
+
+
 }
 
 module.exports = rondaQueries;

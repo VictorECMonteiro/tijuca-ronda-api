@@ -8,7 +8,7 @@ class loginServices {
   constructor() {}
 
   //Criação de Usuário
-  createService = async (nomedeUsuario, senhadeUsuario, permissao, cpf) => {
+  createService = async (nomedeUsuario, senhadeUsuario, permissao, cpf, idSetor) => {
     //Validação de Dados
     var validLogin = loginValidator.loginValidator(cpf, senhadeUsuario);
     if (validLogin == false) {
@@ -19,7 +19,8 @@ class loginServices {
       nomedeUsuario,
       senhadeUsuario,
       permissao,
-      cpf
+      cpf,
+      idSetor
     );
     if (!fresult) {
       return false;

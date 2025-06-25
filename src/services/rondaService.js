@@ -3,13 +3,13 @@ const rondaQueries = require("../repositories/rondaReposity");
 class rondaService {
   rondaQueriesL = new rondaQueries();
 
-  constructor() {}
+  constructor() { }
   async gerarRetornarRondas() {
     try {
       const fresult = await this.rondaQueriesL.gerarRetornar();
       // console.log(fresult);
       return fresult;
-    } catch (e) {}
+    } catch (e) { }
   }
   async iniciarRonda(idRonda) {
     try {
@@ -40,18 +40,23 @@ class rondaService {
     }
   }
 
-  async rondaSearch(dados) {
-    const fresult = await this.rondaQueriesL.rondaSearch(dados);
+  async pesquisarRonda(dados) {
+    const fresult = await this.rondaQueriesL.pesquisarRonda(dados);
     return fresult;
   }
 
-  async rondaSearchLogs(idRonda) {
-    const fresult = await this.rondaQueriesL.rondaSearchLogs(idRonda);
+  async pesquisarRondaLogs(idRonda) {
+    const fresult = await this.rondaQueriesL.pesquisarRondaLogs(idRonda);
     return fresult;
   }
 
-  async rondaFindAll(){
+  async rondaFindAll() {
     const fresult = await this.rondaQueriesL.returnAll();
+    return fresult;
+  }
+
+  async desfazerRonda(idRonda) {
+    const fresult = await this.rondaQueriesL.desfazerRota(idRonda);
     return fresult;
   }
 }

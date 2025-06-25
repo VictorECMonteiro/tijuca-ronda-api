@@ -17,11 +17,13 @@ router.post("/begin", rondaController.rondaIniciarController);
 
 router.post("/stop", rondaController.rondaStopController);
 
-router.post("/search", rondaController.rondaSearchController);
+router.post("/search", rondaController.pesquisarRondaController);
 
-router.post("/rondaSearch", rondaController.rondaSearchLogsController);
+router.post("/rondaSearch", rondaController.pesquisarRondaLogsController);
 
 router.get("/findAll", rondaController.rondaFindAllController);
+
+router.post("/desfazerRonda", rondaController.undoRonda)
 
 
 module.exports = router;

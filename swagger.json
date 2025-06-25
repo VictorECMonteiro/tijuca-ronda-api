@@ -313,11 +313,6 @@
                     "example": "13:00"
                   }
                   ,
-                  "idUsuario": {
-                    "type": "integer",
-                    "description": "ID do usuario a ser atribuído a rota",
-                    "example": "1"
-                  },
                   "idLocal": {
                     "type": "array",
                     "description": "Array de locais a serem adicionados na rota (É necessário que esses locais já tenham sido criados",
@@ -326,7 +321,7 @@
                   "horarioLocais":{
                     "type": "array",
                     "description": "Array de horários a ser adicionado no local, cada item deve ser uma string",
-                    "example":"[13:00, 14:00]"
+                    "example":"['13:00', '14:00']"
                   } 
                 }
               }
@@ -408,6 +403,55 @@
         }
       }
     },
+    "/rota/defUser": {
+      "post": {
+        "description": "Definir Usuário para uma rota",
+        "requestBody": {
+          "requires": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idRota": {
+                    "type": "integer",
+                    "description": "Id da Rota á ser designada o usuário",
+                    "example": "2"
+                  },
+                  "idUsuario":{
+                    "type": "integer",
+                    "description": "Id do Usuario á designar a rota",
+                    "example": "1"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuario atribuido com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro ao atribuir usuário",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+          
+        }
+      }
+    }},
     "/ronda/createAndReturn": {
       "get": {
         "description": "Retornar as rondas, e caso nao tenha sido criado rondas no dia, já as cria automaticamente",

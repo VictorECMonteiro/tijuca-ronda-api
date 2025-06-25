@@ -1,22 +1,16 @@
 const { type } = require("express/lib/response");
 const sequelize = require("../configs/sequelize");
 const modelGeral = require("../models/modelGerais");
-registroRotas = require("../models/ModelRotas")
+registroRotas = require("../models/modelRotas")
 const date = require("../utils/date");
 const horasAtual = require("../utils/retornaHoras");
 class geral {
-  constructor() {}
+  constructor() {
+
+  }
 
   writeLog = async (idUsuario, idRonda, latitude, longitude, idLocal, hora, idRota) => {
     try {
-
-
-
-      // const rotaAtual = await registroRotas.findOne({
-      //   where:{
-      //     idRonda: idRonda
-      //   }
-      // })
       const writeLogInTable = await modelGeral.create({
         latitude: latitude,
         longitude: longitude,
@@ -29,6 +23,12 @@ class geral {
         idRota: idRota
       });
       return true;
+
+
+
+
+
+      
     } catch (e) {
       console.log(e);
       return false;
@@ -51,8 +51,6 @@ class geral {
         type: sequelize.Sequelize.QueryTypes.SELECT,
       }
     );
-
-    console.log(query);
     return query;
   }
   catch(e){
@@ -82,6 +80,10 @@ class geral {
     }
 
   }
+  
+
+
+
 
 
 

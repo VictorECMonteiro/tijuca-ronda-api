@@ -51,16 +51,16 @@ const rondaReturnLocalsController = async (req, res) => {
     res.status(200).send(fresult);
   }
 };
-const rondaSearchController = async (req, res) => {
+const pesquisarRondaController = async (req, res) => {
   const dados = req.body;
-  const fresult = await rondaService.rondaSearch(dados);
+  const fresult = await rondaService.pesquisarRonda(dados);
   fresult.length == 0
     ? res.status(400).send({ success: false })
     : res.status(200).send(fresult);
 };
-const rondaSearchLogsController = async (req, res) => {
+const pesquisarRondaLogsController = async (req, res) => {
   const dados = req.body;
-  const fresult = await rondaService.rondaSearchLogs(dados.idRonda);
+  const fresult = await rondaService.pesquisarRondaLogs(dados.idRonda);
   fresult.length === 0
     ? res.status(400).send({ success: false })
     : res.status(200).send(fresult);
@@ -71,7 +71,14 @@ const rondaFindAllController = async (req,res )=>{
   fresult.length === 0
     ? res.status(400).send({ success: false })
     : res.status(200).send(fresult);
+}
 
+const undoRonda = async (req,res)=>{
+  const dados = req.body
+  const fresult = await rondaService.desfazerRonda(dados.idRonda)
+  fresult.length === true
+    ? res.status(200).send({ success: true })
+    : res.status(400).send({ success: false });
 }
 
 module.exports = {
@@ -79,7 +86,8 @@ module.exports = {
   rondaIniciarController,
   rondaStopController,
   rondaReturnLocalsController,
-  rondaSearchController,
-  rondaSearchLogsController,
-  rondaFindAllController
+  pesquisarRondaController,
+  pesquisarRondaLogsController,
+  rondaFindAllController,
+  undoRonda
 };

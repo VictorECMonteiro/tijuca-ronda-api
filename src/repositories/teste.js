@@ -1,42 +1,39 @@
-const sequelize = require("../configs/sequelize");
-// async function teste(idRonda){
-// const resposta = await sequelize.sequelize.query(`SELECT t3.idGeral, t4.nomeLocal FROM rondas as t1
-// 	LEFT JOIN rotas as t2 ON t2.idRota = t1.idRota
-//     LEFT JOIN gerais as t3 ON t3.idLocal = t2.idLocal
+const haversine = require("haversine")
 
-//     LEFT JOIN locais as t4 ON t4.idLocal = t2.idLocal
-//   where t1.idRonda = 1`, {
-//     replacements:{
-//         idRonda: idRonda
 
-//     }
-//   })
 
-//   const respostaUnica = resposta[0].filter((value, index, self) =>
-//     index === self.findIndex((t) => (
-//       t.idGeral === value.idGeral// ou outros critérios para identificar duplicações
-//     ))
-//   );
-//   console.log(respostaUnica);
-// // console.log(teste2)
-// }
 
-async function teste(idUsuario, idRonda, latitude, longitude, idLocal) {
-  const getRota = await sequelize.sequelize.query(
-    `SELECT ro.idRota FROM rondas as r
-     LEFT JOIN rotas as ro on r.idRota = ro.idRota
-     where r.idRonda = :idRonda;
-    `,
-    {
-      replacements: {
-        idRonda: idRonda,
-      },
-      type: sequelize.Sequelize.QueryTypes.SELECT,
-    }
-  );
-  console.log(getRota[0]);
+
+
+
+
+
+
+
+async function teste() {
+  //Dado que será retornado do banco de dados
+  const pointLocalBanco = {
+    latitude: -3.856597,
+    longitude: -38.506905
+  }
+
+  //Dado que será enviado pelo dispositivo do usuario
+  const userLocal = {
+    latitude: -3.856503,
+    longitude: -38.506888
+
+  }
+
+  //PS: Dá pra fazer na mão esse calculo usando a formula de haversine  
+  let noLocal = haversine(pointLocalBanco, userLocal, {unit: "meter"})
+  console.log(Math.round(noLocal))
+
+  
+  
+  noLocal >= 20?console.log("Fora do Local"):console.log("No Local")
+  
 }
 
-teste(1, 132, 1, 1, 1);
+teste();
 
-// console.log(teste1)
+

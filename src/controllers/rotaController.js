@@ -8,7 +8,6 @@ const rotaCreateController = async (req, res, next) => {
     req.body.horarioInicio,
     req.body.idLocal,
     req.body.horarioLocais,
-    req.body.idUsuario
   );
 
   fresult === true
@@ -33,4 +32,30 @@ const listController = async (req, res) => {
     : res.status(200).send(fresult);
 };
 
-module.exports = { rotaCreateController, rotaDeleteController, listController };
+const listLocals = async (req,res) =>{
+  const dados = req.body
+
+  const fresult = await rotaService.listLocals(dados.idRota)
+
+  fresult.length === 0
+  ? res.status(400).send({success: false})
+  : res.status(200).send(fresult)
+
+}
+
+const defUserRota = async (req,res) => {
+  const dados = req.body
+
+  let fresult = await rotaService.defUserServ(dados.idRota, dados.idUsuario)
+
+  fresult === true?
+  res.status(200).send({success: true}):
+  res.status(400).send({success: false})
+}
+
+
+
+
+
+
+module.exports = { rotaCreateController, rotaDeleteController, listController, listLocals, defUserRota };

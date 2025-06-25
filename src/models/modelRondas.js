@@ -1,6 +1,6 @@
 const database = require("../configs/sequelize.js");
 const Geral = require("./modelGerais.js");
-const Rotas = require("./ModelRotas.js");
+const Rotas = require("./modelRotas.js");
 
 var Ronda = database.sequelize.define("rondas", {
   idRonda: {

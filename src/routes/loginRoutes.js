@@ -12,7 +12,6 @@ router.use(bodyParser.json());
 router.post("/loginHandle", loginController.loginControllerHandle);
 router.post(
   "/create",
-  [admin, token],
   loginController.loginControllerHandleCreator
 );
 router.get("/listUsers",loginController.loginControllerGetUsers);

@@ -14,7 +14,8 @@ const loginControllerHandleCreator = async (req, res, next) => {
     req.body.nomedeUsuario,
     req.body.senhadeUsuario,
     req.body.permissao,
-    req.body.cpf
+    req.body.cpf,
+    req.body.idSetor
   );
   //Responde a requisição com base na resposta do service
   fresult == true
