@@ -56,6 +56,12 @@ class loginServices {
 
     return fresult;
   };
+  userDataModifyService = async (dados) => {
+    const fresult = await this.loginQueries.modifyUserData(dados);
+
+
+    return fresult;
+  }
   deactivateService = async (idUsuario) => {
     const fresult = await this.loginQueries.deactivate(idUsuario);
     return fresult;

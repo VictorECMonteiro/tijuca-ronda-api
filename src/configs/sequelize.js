@@ -11,7 +11,17 @@ const sequelize = new Sequelize("tijucaronda2", "root", process.env.dbKey, {
 
 sequelize
   .authenticate()
-  .then(() => {
+  .then(async () => {
+    
+    // const root = await sequelize.query("SELECT * FROM usuarios WHERE permissao = 'admin';", {
+    //   Type: Sequelize.QueryTypes.SELECT
+    // })
+
+    // sequelize.query("INSERT INTO 'usuarios' VALUES('root', 'admin', 'admin', 1, 0)")
+
+
+
+
     console.log("Connectado");
   })
   .catch((e) => {

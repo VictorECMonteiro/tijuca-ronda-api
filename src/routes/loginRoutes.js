@@ -16,6 +16,7 @@ router.post(
 );
 router.get("/listUsers",loginController.loginControllerGetUsers);
 router.post("/modify", loginController.loginControllerModify);
+router.post("/modifyUserData", loginController.loginControllerUserDataModify)
 router.post("/deactivate", loginController.loginControllerDeactivate);
 router.post("/token", [token], loginController.verifyToken);
 

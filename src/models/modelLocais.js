@@ -14,6 +14,14 @@ const Local = database.sequelize.define("locais", {
     type: database.Sequelize.STRING,
     allowNull: false,
   },
+  latitude: {
+    type: database.Sequelize.STRING,
+    allowNull: false
+  }, 
+  longitude: {
+    type: database.Sequelize.STRING,
+    allowNull: false
+  }
 });
 
 Local.hasMany(Geral, {

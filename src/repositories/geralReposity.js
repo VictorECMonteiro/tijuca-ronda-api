@@ -23,12 +23,6 @@ class geral {
         idRota: idRota
       });
       return true;
-
-
-
-
-
-      
     } catch (e) {
       console.log(e);
       return false;

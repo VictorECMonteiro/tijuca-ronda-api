@@ -33,7 +33,7 @@ const listController = async (req, res) => {
 };
 
 const listLocals = async (req,res) =>{
-  const dados = req.body
+  const dados = req.query
 
   const fresult = await rotaService.listLocals(dados.idRota)
 

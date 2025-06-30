@@ -275,7 +275,7 @@ class rondaQueries {
   async retornaLocaisVisitados(idRonda) {
     const localFinded = await sequelize.sequelize.query(
       `
-      SELECT distinct t4.nomeLocal, t5.idRonda, t5.hora, t4.idLocal from rondas as t1
+      SELECT distinct t4.nomeLocal, t5.idRonda, t5.hora, t4.idLocal, t5.idUsuario from rondas as t1
       LEFT JOIN rotas as t2 on t1.idRota = t2.idRota
       LEFT JOIN rotas_locais as t3 on t3.idRota = t2.idRota
       LEFT JOIN locais as t4 on t4.idLocal = t3.idLocal
@@ -344,6 +344,7 @@ class rondaQueries {
       return [];
     }
   }
+  //Transformar em pesquisar ronda com filtro
   async returnAll(){
     try{
         const findAll = await registroRonda.findAll()
@@ -353,6 +354,7 @@ class rondaQueries {
       return []
     }
   }
+  //
   async desfazerRota(idRonda){
     try{
       await registroRonda.update({

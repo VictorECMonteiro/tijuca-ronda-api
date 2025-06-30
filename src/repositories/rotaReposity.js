@@ -11,11 +11,8 @@ class rotaQueries {
 
   async createRota(nomeRota, horarioInicio, idLocal, horarioLocais) {
     try { 
-      //Valida se o array de locais tem itens repetidos
-      const validator = verificarItensRepetidos(idLocal);
+
       const locais  = await registroLocal.findAll()
-      //Valida se o array está vazio
-      const lengthValidator = idLocal.length === 0;
       //Instancia classe de reposity Usuario - Rota
       let rotaUserReposityInstance = new rotaUserReposity()
       //Cria rota no banco de dados
@@ -24,7 +21,7 @@ class rotaQueries {
         horarioInicio: horarioInicio
       })
       //Faz a checagen dos dados
-      if (!validator && !lengthValidator && locais.length > 0) {
+      
         //Cria chave da rota na tabela Usuario-Rota
         await rotaUserReposityInstance.insertRotaInTable(rotaCriada.dataValues.idRota)
         //Cria chave da rota na tabela Locais-Rota
@@ -36,7 +33,7 @@ class rotaQueries {
           })
         }
         return true;
-      }
+      
     } catch (e) {
         // console.log(e)
 
@@ -74,7 +71,7 @@ class rotaQueries {
   async listLocals(idRota) {
     try {
       const fresult = await sequelize.sequelize.query(`
-          SELECT l.nomeLocal, rl1.horario FROM rotas_locais as rl1
+          SELECT l.nomeLocal, rl1.horario, rl1.idLocal, rl1.id FROM rotas_locais as rl1
           LEFT JOIN locais as l on rl1.idLocal = l.idLocal
           WHERE rl1.idRota = :idRota;
         `, {
@@ -92,10 +89,7 @@ class rotaQueries {
   async defUser(idRota, idUsuario){
     try{ 
       let rotaUserReposityInstance = new rotaUserReposity()
-
       await rotaUserReposityInstance.updateRotaUser(idRota, idUsuario)
-
-
       return true
     }
     catch(e){
@@ -103,6 +97,18 @@ class rotaQueries {
     
     }
 
+  }
+  async changeOrder(ordemAnterior, ordemNova){
+    try{
+      
+
+
+
+
+    }
+    catch(e){
+
+    }
   }
 }
 

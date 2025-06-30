@@ -2,15 +2,24 @@ const localQueries = require("../repositories/localReposity.js");
 
 class localService {
   querieLocals = new localQueries();
-  constructor() {}
+  constructor() { }
 
-  localCreate = async (nomeLocal) => {
+  localCreate = async (nomeLocal, latitude, longitude, idSetor) => {
     try {
-      const fresult = await this.querieLocals.createLocal(nomeLocal);
+      const fresult = await this.querieLocals.createLocal(nomeLocal, latitude, longitude, idSetor);
       return true;
     } catch (e) {
       return false;
     }
+  };
+  edit = async (dados) => {
+    try {
+      const fresult = await this.querieLocals.edit(dados);
+      return true;
+    } catch (e) {
+      return false;
+    }
+
   };
   list = async () => {
     try {
@@ -19,10 +28,10 @@ class localService {
       return fresult
 
     } catch (e) {
-        console.log(e)
+      console.log(e)
     }
   };
-  delete = async (idLocal)=>{
+  delete = async (idLocal) => {
     const fresult = await this.querieLocals.deleteLocal(idLocal)
     return fresult
   }

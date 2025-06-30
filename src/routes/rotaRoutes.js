@@ -11,7 +11,7 @@ router.use(bodyParser.json());
 router.post("/create", rotaController.rotaCreateController);
 router.post("/delete", rotaController.rotaDeleteController);
 router.get("/list", rotaController.listController);
-router.post("/listLocals", rotaController.listLocals)
+router.get("/listLocals", rotaController.listLocals)
 //Catalogar no Swagger
 router.post("/defUser", rotaController.defUserRota)
 

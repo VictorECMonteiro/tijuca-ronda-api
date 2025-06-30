@@ -68,13 +68,19 @@ const loginControllerModify = async (req, res, next) => {
     dados.senhadeUsuarioAtual,
     dados.senhadeUsuarioNova
   );
-  console.log(fresult);
   if (fresult.success) {
     res.status(200).send(fresult);
   } else {
     res.status(400).send(fresult);
   }
 };
+const loginControllerUserDataModify = async (req,res, next)=>{
+  const dados = req.body;
+  const fresult = await loginService.userDataModifyService(dados)
+  fresult?res.status(200).send({success: true}): res.status(400).send({success: false})
+
+
+}
 const loginControllerDeactivate = async (req, res) => {
   const dados = req.body;
   const fresult = await loginService.deactivateService(dados.idUsuario);
@@ -94,4 +100,5 @@ module.exports = {
   verifyToken,
   loginControllerModify,
   loginControllerDeactivate,
+  loginControllerUserDataModify
 };

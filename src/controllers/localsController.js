@@ -3,8 +3,8 @@ require("dotenv").config();
 const localService = new Service();
 
 const localCreateController = async (req, res) => {
-  // console.log(req.body);
-  const fresult = await localService.localCreate(req.body.nomeLocal);
+  let dados = req.body
+  const fresult = await localService.localCreate(dados.nomeLocal, dados.latitude, dados.longitude, req.header.idSetor);
 
   if (fresult) {
     res.status(200).send({ success: true, msg: "Local criado com sucesso" });
@@ -26,6 +26,11 @@ const listController = async (req, res) => {
     res.status(200).send(fresult);
   }
 };
+const editController = async (req, res) => {
+  const dados = req.body;
+  const fresult = await localService.edit(dados);
+  fresult ? res.status(200).send({ success: true }) : res.status(400).send({ success: true })
+}
 const deleteLocalController = async (req, res) => {
   const dados = req.body;
   const fresult = await localService.delete(dados.idLocal);
@@ -38,4 +43,5 @@ module.exports = {
   localCreateController,
   listController,
   deleteLocalController,
+  editController
 };

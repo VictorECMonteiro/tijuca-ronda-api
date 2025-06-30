@@ -2,13 +2,13 @@ const modelLocal = require("../models/modelLocais");
 const modelRotaLocal = require("../models/modelRotas_Locais")
 
 class localQueries {
-  constructor() {}
+  constructor() { }
 
-  createLocal = async (nomeLocal, idSetor, latitude, longitude) => {
+  createLocal = async (nomeLocal, latitude, longitude, idSetor) => {
     try {
       const fresult = await modelLocal.create({
         nomeLocal: nomeLocal,
-        latitude: latitude, 
+        latitude: latitude,
         longitude: longitude,
         idSetor: idSetor
       });
@@ -27,6 +27,24 @@ class localQueries {
       throw E;
     }
   };
+  edit = async (dados) => {
+    var json = {};
+    for (let key in dados) {
+      if (dados[key]) {
+        json[key.toString()] = dados[key];
+      }
+    }
+    try {
+      await modelLocal.update(json, {where:{idLocal: dados.idLocal}})
+
+      return true
+    }
+    catch (e) {
+      return false
+
+    }
+
+  }
   deleteLocal = async (idLocal) => {
     try {
       await modelLocal.destroy({

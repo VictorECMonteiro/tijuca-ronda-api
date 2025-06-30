@@ -76,7 +76,7 @@ const rondaFindAllController = async (req,res )=>{
 const undoRonda = async (req,res)=>{
   const dados = req.body
   const fresult = await rondaService.desfazerRonda(dados.idRonda)
-  fresult.length === true
+  fresult === true
     ? res.status(200).send({ success: true })
     : res.status(400).send({ success: false });
 }
