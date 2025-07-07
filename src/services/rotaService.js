@@ -38,6 +38,26 @@ class rotaService {
     const fresult = await this.rotaQueriesl.defUser(idRota, idUsuario)
     return fresult;
   }
+  async changeLocalOrderService(listaAnterior, listaAtual, idRota) {
+    for (let i = 0; i <= listaAnterior.length - 1; i++) {
+      if (listaAnterior[i] === listaAtual[i]) {
+        listaAnterior.splice(i, i + 1);
+        listaAtual.splice(i, i + 1);
+      }
+      for (let j = 0; j <= listaAnterior.length - 1; j++) {
+        if (listaAnterior[i] === listaAtual[j]) {
+          if (listaAnterior[j] === listaAtual[i]) {
+            listaAnterior.splice(j, j + 1)
+            listaAtual.splice(j, j + 1)
+          }
+        }
+      }
+    }
+
+
+    const result = await this.rotaQueriesl.changeOrder(listaAnterior, listaAtual, idRota)
+    return result;
+  }
 }
 
 module.exports = rotaService;

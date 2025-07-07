@@ -206,6 +206,18 @@ class rondaQueries {
   async encerraRonda(data) {
     let logClass = new logClassInstance()
     let horarioAtual = retornaHoras()
+
+
+
+// observacoes: [
+//  {idLocal: ["observação1", "observação2"]}
+// ]
+//
+
+
+
+
+
     try {
       const rondaAtual = await sequelize.sequelize.query(
         `select * from rondas as r

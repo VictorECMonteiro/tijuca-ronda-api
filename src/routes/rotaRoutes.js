@@ -14,5 +14,6 @@ router.get("/list", rotaController.listController);
 router.get("/listLocals", rotaController.listLocals)
 //Catalogar no Swagger
 router.post("/defUser", rotaController.defUserRota)
+router.post("/changeLocalOrder", rotaController.changeLocalOrderController)
 
 module.exports = router;

@@ -52,10 +52,16 @@ const defUserRota = async (req,res) => {
   res.status(200).send({success: true}):
   res.status(400).send({success: false})
 }
+const changeLocalOrderController = async (req,res)=>{
+  const dados = req.body
+  let fresult = await rotaService.changeLocalOrderService(dados.listaAnterior, dados.listaAtual, dados.idRota)
+
+  fresult === true? res.status(200).send({success: true}): res.status(400).send({success: false})
+
+}
 
 
 
 
 
-
-module.exports = { rotaCreateController, rotaDeleteController, listController, listLocals, defUserRota };
+module.exports = { rotaCreateController, rotaDeleteController, listController, listLocals, defUserRota, changeLocalOrderController };

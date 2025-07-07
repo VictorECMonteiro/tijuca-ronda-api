@@ -5,6 +5,7 @@ const registroRotas_Locais = require("../models/modelRotas_Locais")
 const sequelize = require("../configs/sequelize");
 const verificarItensRepetidos = require("../utils/verificarItemRepetido");
 const rotaUserReposity = require("./rotaUserReposity")
+const rotaLocalReposity = require("./rotaLocalreposity")
 
 class rotaQueries {
   constructor() { }
@@ -98,13 +99,11 @@ class rotaQueries {
     }
 
   }
-  async changeOrder(ordemAnterior, ordemNova){
+  async changeOrder(ordemAnterior, ordemAtual, idRota){
     try{
-      
-
-
-
-
+      let rotaUserReposityInstance = new rotaLocalReposity()
+      let result = rotaUserReposityInstance.changeOrder(ordemAnterior, ordemAtual, idRota);
+      return result
     }
     catch(e){
 
