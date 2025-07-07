@@ -1,66 +1,61 @@
-const registroRota = require("../models/ModelRotas");
-const registroRonda = require("../models/ModelRondas");
+const registroRota = require("../models/modelRotas");
+const registroRonda = require("../models/modelRondas");
 const registroLocal = require("../models/modelLocais");
+const registroRotas_Locais = require("../models/modelRotas_Locais")
 const sequelize = require("../configs/sequelize");
-const { where } = require("sequelize");
 const verificarItensRepetidos = require("../utils/verificarItemRepetido");
+const rotaUserReposity = require("./rotaUserReposity")
+const rotaLocalReposity = require("./rotaLocalreposity")
 
 class rotaQueries {
-  constructor() {}
+  constructor() { }
 
-  async createRota(nomeRota, horarioInicio, idLocal) {
-    try {
-      //Valida se o array de locais tem itens repetidos
-      const validator = verificarItensRepetidos(idLocal);
-      //Valida se o array está vazio
-      const lengthValidator = idLocal.length === 0;
+  async createRota(nomeRota, horarioInicio, idLocal, horarioLocais) {
+    try { 
 
-      if (!validator && !lengthValidator) {
+      const locais  = await registroLocal.findAll()
+      //Instancia classe de reposity Usuario - Rota
+      let rotaUserReposityInstance = new rotaUserReposity()
+      //Cria rota no banco de dados
+      const rotaCriada = await registroRota.create({
+        nomeRota: nomeRota,
+        horarioInicio: horarioInicio
+      })
+      //Faz a checagen dos dados
+      
+        //Cria chave da rota na tabela Usuario-Rota
+        await rotaUserReposityInstance.insertRotaInTable(rotaCriada.dataValues.idRota)
+        //Cria chave da rota na tabela Locais-Rota
         for (let i = 0; i <= idLocal.length - 1; i++) {
-          if (i > 0) {
-            const [result, metadata] = await sequelize.sequelize.query(
-              `INSERT INTO rotas(idRota, nomeRota,horarioInicio,idLocal) 
-         SELECT (SELECT COALESCE(MAX(idRota), 0) FROM rotas),
-         :nomeRota, :horarioInicio , :idLocal`,
-              {
-                replacements: {
-                  nomeRota: nomeRota,
-                  horarioInicio: horarioInicio,
-                  idLocal: idLocal[i],
-                },
-                type: sequelize.Sequelize.QueryTypes.INSERT,
-              }
-            );
-          } else {
-            const [result, metadata] = await sequelize.sequelize.query(
-              `INSERT INTO rotas(idRota, nomeRota,horarioInicio,idLocal) 
-             SELECT (SELECT COALESCE(MAX(idRota), 0)+1 FROM rotas),
-             :nomeRota, :horarioInicio , :idLocal`,
-              {
-                replacements: {
-                  nomeRota: nomeRota,
-                  horarioInicio: horarioInicio,
-                  idLocal: idLocal[i],
-                },
-                type: sequelize.Sequelize.QueryTypes.INSERT,
-              }
-            );
-          }
+          await registroRotas_Locais.create({
+            horario: horarioLocais[i],
+            idLocal: idLocal[i],
+            idRota: rotaCriada.dataValues.idRota
+          })
         }
         return true;
-      }
+      
     } catch (e) {
-      console.log(e);
-      return false;
+        // console.log(e)
+
+        return false;
     }
   }
   async delete(idRota) {
     try {
-      const fresult = await registroRota.destroy({
+      let rotaUserReposityInstance = new rotaUserReposity()
+      
+      await registroRotas_Locais.destroy({
         where: {
-          idRota: idRota,
-        },
-      });
+          idRota: idRota
+        }
+      })
+      await registroRota.destroy({
+        where: {
+          idRota: idRota
+        }
+      })
+      await rotaUserReposityInstance.deleteRotaUser(idRota)
       return true;
     } catch (e) {
       return false;
@@ -68,10 +63,50 @@ class rotaQueries {
   }
   async list() {
     try {
-      const fresult = await registroRota.findAll();
-      return fresult;
+      const fresult = await registroRota.findAll(); 
+      return fresult.flat();
     } catch (e) {
       return [];
+    }
+  }
+  async listLocals(idRota) {
+    try {
+      const fresult = await sequelize.sequelize.query(`
+          SELECT l.nomeLocal, rl1.horario, rl1.idLocal, rl1.id FROM rotas_locais as rl1
+          LEFT JOIN locais as l on rl1.idLocal = l.idLocal
+          WHERE rl1.idRota = :idRota;
+        `, {
+          replacements:{
+            idRota: idRota
+          },
+          type: sequelize.Sequelize.QueryTypes.SELECT
+        })
+        return fresult;
+    }
+    catch (e) {
+      return []
+    }
+  }
+  async defUser(idRota, idUsuario){
+    try{ 
+      let rotaUserReposityInstance = new rotaUserReposity()
+      await rotaUserReposityInstance.updateRotaUser(idRota, idUsuario)
+      return true
+    }
+    catch(e){
+      return false
+    
+    }
+
+  }
+  async changeOrder(ordemAnterior, ordemAtual, idRota){
+    try{
+      let rotaUserReposityInstance = new rotaLocalReposity()
+      let result = rotaUserReposityInstance.changeOrder(ordemAnterior, ordemAtual, idRota);
+      return result
+    }
+    catch(e){
+
     }
   }
 }

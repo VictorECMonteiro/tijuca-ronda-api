@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://192.168.9.247:9010"
+      "url": "http://192.168.9.249:9010"
     }
   ],
   "paths": {
@@ -32,7 +32,9 @@
                     "example": "MinhaSenhaDeUsuario"
                   }
                 },
-                "required": ["cpf"]
+                "required": [
+                  "cpf"
+                ]
               }
             }
           }
@@ -105,7 +107,15 @@
           }
         ],
         "responses": {
-          "200": "Usuario Criado com Sucesso"
+          "200": {
+            "description": "Usuário criado com sucesso"
+          },
+          "400": {
+            "description": "Erro na requisição, verifique as informações"
+          },
+          "401": {
+            "description": "Erro na requisição, verifique as informações"
+          }
         }
       }
     },
@@ -220,10 +230,53 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Senha de usuario modificada com sucesso"
           },
           "400": {
             "description": "Usuario ou Senha Incorreto, ou informações não preenchidas na requisição"
+          }
+        }
+      }
+    },
+    "/login/userDataModify": {
+      "post": {
+        "description": "Rota de modificação de dados de usuario",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idUsuario": {
+                    "type": "int",
+                    "description": "Insira o ID",
+                    "example": "1"
+                  },
+                  "cpf": {
+                    "type": "int",
+                    "description": "CPF, de 11 digitos",
+                    "example": "12345678901"
+                  },
+                  "nomedeUsuario": {
+                    "type": "string",
+                    "description": "Insira sua senha de usuario atual",
+                    "example": "usuario123"
+                  },
+                  "permissao": {
+                    "type": "string",
+                    "description": "Insira sua senha",
+                    "example": "vigia"
+                  }
+                },
+                "required": [
+                  "idUsuario",
+                  "cpf",
+                  "nomedeUsuario",
+                  "permissao"
+                ]
+              }
+            }
           }
         }
       }
@@ -244,14 +297,16 @@
                     "example": "1"
                   }
                 },
-                "required": ["idUsuario"]
+                "required": [
+                  "idUsuario"
+                ]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Status de usuário modificado com sucesso"
           },
           "400": {
             "description": "Usuario ou Senha Incorreto, ou informações não preenchidas na requisição"
@@ -308,6 +363,11 @@
                     "type": "array",
                     "description": "Array de locais a serem adicionados na rota (É necessário que esses locais já tenham sido criados",
                     "example": "[1,2]"
+                  },
+                  "horarioLocais": {
+                    "type": "array",
+                    "description": "Array de horários a ser adicionado no local, cada item deve ser uma string",
+                    "example": "['13:00', '14:00']"
                   }
                 }
               }
@@ -316,7 +376,17 @@
         },
         "responses": {
           "200": {
-            "description": "Usuarios Retornados com sucesso",
+            "description": "Rota criada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro ao criar rota, recomendado verificar as informações do payload",
             "content": {
               "application/json": {
                 "schema": {
@@ -372,6 +442,84 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rota/listLocals": {
+      "get": {
+        "description": "Retornar os locais atribuidos em um idRota",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "idRota",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "description": "id da rota a ser consultado os locais",
+              "example": "4"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Locais da rota retornados com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rota/defUser": {
+      "post": {
+        "description": "Definir Usuário para uma rota",
+        "requestBody": {
+          "requires": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idRota": {
+                    "type": "integer",
+                    "description": "Id da Rota á ser designada o usuário",
+                    "example": "2"
+                  },
+                  "idUsuario": {
+                    "type": "integer",
+                    "description": "Id do Usuario á designar a rota",
+                    "example": "1"
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Usuario atribuido com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro ao atribuir usuário",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
                 }
               }
             }
@@ -456,9 +604,39 @@
         }
       }
     },
+    "/ronda/desfazerRonda": {
+      "post": {
+        "description": "Desfazer uma ronda iniciada por engano",
+        "requestBody": {
+          "requires": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idRonda": {
+                    "type": "integer",
+                    "description": "ID da ronda a ser desfeita",
+                    "example": "1"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ronda desfeita com sucesso"
+          },
+          "400": {
+            "description": "Erro ao desfazer ronda"
+          }
+        }
+      }
+    },
     "/ronda/search": {
       "post": {
-        "description": "Rota para encerrar a ronda",
+        "description": "Rota para pesquisa de ronda com base nos parametros fornecidos",
         "requestBody": {
           "requires": true,
           "content": {
@@ -493,10 +671,10 @@
         },
         "responses": {
           "200": {
-            "description": "Ronda encerrada com sucesso"
+            "description": "Ronda encontrada"
           },
           "400": {
-            "description": "Ronda ja encerrada ou Inexistente"
+            "description": "Ronda não encontrada ou inexistente"
           }
         }
       }
@@ -526,7 +704,6 @@
         }
       }
     },
-
     "/local/list": {
       "get": {
         "description": "Rota para resgatar a lista de todos os usuários do sistema",
@@ -583,6 +760,18 @@
     "/local/create": {
       "post": {
         "description": "Rota para criar um local",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "idSetor",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "description": "Id do setor á qual esse local pertence",
+              "example": "0"
+            }
+          }
+        ],
         "requestBody": {
           "requires": true,
           "content": {
@@ -594,6 +783,14 @@
                     "type": "string",
                     "description": "Nome do local a ser criado",
                     "example": "Pátio"
+                  },
+                  "latitude": {
+                    "type": "string",
+                    "description": "Coordenadas do local a ser criado"
+                  },
+                  "longitude": {
+                    "type": "string",
+                    "description": "Coordenadas do local a ser criado"
                   }
                 }
               }
@@ -602,10 +799,52 @@
         },
         "responses": {
           "200": {
-            "description": "Ronda encerrada com sucesso"
+            "description": "Local criado com sucesso"
           },
           "400": {
-            "description": "Ronda ja encerrada ou Inexistente"
+            "description": "Erro ao criar local"
+          }
+        }
+      }
+    },
+    "/local/edit": {
+      "post": {
+        "description": "Rota para criar um local",
+        "requestBody": {
+          "requires": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nomeLocal": {
+                    "type": "string",
+                    "description": "Nome do local a ser criado",
+                    "example": "Pátio"
+                  },
+                  "idLocal": {
+                    "type": "integer",
+                    "description": "Id do local a ser modificado"
+                  },
+                  "latitude": {
+                    "type": "string",
+                    "description": "Coordenadas do local a ser criado"
+                  },
+                  "longitude": {
+                    "type": "string",
+                    "description": "Coordenadas do local a ser criado"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Local modificado com sucesso"
+          },
+          "400": {
+            "description": "Erro ao modificar local"
           }
         }
       }
@@ -686,6 +925,36 @@
           },
           "400": {
             "description": "Erro ao excluir log"
+          }
+        }
+      }
+    },
+    "/setor/create": {
+      "post": {
+        "description": "Rota para criar log de vistoria",
+        "requestBody": {
+          "requires": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nomeSetor": {
+                    "type": "string",
+                    "description": "Nome do setor a ser criado",
+                    "example": "Tijuca Alimentos Messejana"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Setor criado com sucesso"
+          },
+          "400": {
+            "description": "Erro ao criar Setor"
           }
         }
       }

@@ -7,7 +7,7 @@ const { where } = require("sequelize");
 class loginQueries {
   constructor() {}
   //Lida com a Query de criar login de usuario(Admin)
-  createLogin = (nomedeUsuario, senhadeUsuario, permissao, cpf) => {
+  createLogin = (nomedeUsuario, senhadeUsuario, permissao, cpf, idSetor) => {
     //Cria login de usuário com criptografia no banco
     try {
       //Gera criptografia a partir da senha fornecida
@@ -22,6 +22,7 @@ class loginQueries {
               permissao: permissao,
               cpf: cpf,
               status: 1,
+              idSetor: idSetor
             })
             .then(() => {
               return true;
@@ -142,6 +143,35 @@ class loginQueries {
       return { success: false, msg: "Erro ao alterar senha" };
     }
   };
+
+  modifyUserData = async (dados) =>{
+    try{
+      for (let key in dados) {
+        if (dados[key]) {
+          json[key.toString()] = dados[key];
+        }
+      }
+      registroVigia.update(json, {where:{idUsuario:dados.idUsuario}})
+      return true
+      }
+      catch(E){
+        return false
+      }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   deactivate = async (idUsuario) => {
     try {

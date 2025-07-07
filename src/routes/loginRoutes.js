@@ -12,11 +12,11 @@ router.use(bodyParser.json());
 router.post("/loginHandle", loginController.loginControllerHandle);
 router.post(
   "/create",
-  // [admin, token],
   loginController.loginControllerHandleCreator
 );
-router.get("/listUsers", loginController.loginControllerGetUsers);
+router.get("/listUsers",loginController.loginControllerGetUsers);
 router.post("/modify", loginController.loginControllerModify);
+router.post("/modifyUserData", loginController.loginControllerUserDataModify)
 router.post("/deactivate", loginController.loginControllerDeactivate);
 router.post("/token", [token], loginController.verifyToken);
 

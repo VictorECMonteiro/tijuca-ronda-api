@@ -2,7 +2,8 @@
 const express = require("express");
 const app = express();
 require("dotenv").config();
-const Loginrouter = require("./src/routes/loginRoutes");
+const loginRouter = require("./src/routes/loginRoutes");
+const setorRouter = require("./src/routes/setorRoutes")
 const rondaRouter = require("./src/routes/rondaRoutes");
 const rotaRouter = require("./src/routes/rotaRoutes");
 const localRouter = require("./src/routes/localRoutes");
@@ -29,11 +30,12 @@ app.get("/", (req, res) => {
   res.send("Esta é a API do projeto: Tijuca Ronda");
 });
 app.use("/doc", swaggerUi.serve, swaggerUi.setup(config));
-app.use("/login", Loginrouter);
+app.use("/login", loginRouter);
 app.use("/ronda", rondaRouter);
 app.use("/rota", rotaRouter);
 app.use("/local", localRouter);
 app.use("/geral", geralRouter);
+app.use("/setor", setorRouter);
 app.listen(process.env.portaApi);
 
 //API TIJUCA RONDAS 2025

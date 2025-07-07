@@ -1,5 +1,7 @@
 function compararHora(hora1, hora2)
 {
+    console.log(typeof(hora1))
+    console.log(typeof(hora2))
     hora1 = hora1.split(":");
     hora2 = hora2.split(":");
 

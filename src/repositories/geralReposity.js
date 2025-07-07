@@ -1,67 +1,26 @@
 const { type } = require("express/lib/response");
 const sequelize = require("../configs/sequelize");
 const modelGeral = require("../models/modelGerais");
+registroRotas = require("../models/modelRotas")
 const date = require("../utils/date");
 const horasAtual = require("../utils/retornaHoras");
 class geral {
-  constructor() {}
+  constructor() {
 
-  writeLog = async (idUsuario, idRonda, latitude, longitude, idLocal) => {
+  }
+
+  writeLog = async (idUsuario, idRonda, latitude, longitude, idLocal, hora, idRota) => {
     try {
-      // const verifyLocal = await sequelize.sequelize.query(
-      //   `
-      //   SELECT t3.nomeLocal, t4.idRonda, t4.hora from rondas as t1
-      //   LEFT JOIN rotas as t2 on t1.idRota = t2.idRota
-      //   LEFT JOIN locais as t3 on t2.idLocal = t3.idLocal
-      //   LEFT JOIN gerais as t4 on t4.idRonda = t1.idRonda
-      //   where t1.idRonda = :idRonda;`,
-      //   {
-      //     replacements: {
-      //       idRonda: idRonda,
-      //     },
-      //     type: sequelize.Sequelize.QueryTypes.SELECT,
-      //   }
-      // );z
-      // console.log(verifyLocal);
-      // for (var i = 0; i <= verifyLocal.length - 1; i++) {
-      //   let verifyLocalTemp = verifyLocal[i];
-      //   if (verifyLocalTemp.idRonda != null && verifyLocal.length - 1 === i) {
-      //     return false;
-      //   }
-      // }
-      // [
-      //   {
-      //     "nomeLocal": "Pátio",
-      //     "idRonda": null,
-      //     "hora": null
-      //   },
-      //   {
-      //     "nomeLocal": "Pátio",
-      //     "idRonda": null,
-      //     "hora": null
-      //   }
-      // ]
-      const getRota = await sequelize.sequelize.query(
-        ` SELECT ro.idRota FROM rondas as r
-          LEFT JOIN rotas as ro on r.idRota = ro.idRota
-          where r.idRonda = :idRonda;
-                `,
-        {
-          replacements: {
-            idRonda: idRonda,
-          },
-          type: sequelize.Sequelize.QueryTypes.SELECT,
-        }
-      );
       const writeLogInTable = await modelGeral.create({
         latitude: latitude,
         longitude: longitude,
         data: date(),
-        hora: horasAtual(),
-        idRota: getRota[0].idRota,
+        hora: hora,
+        idRota: idRota,
         idRonda: idRonda,
         idLocal: idLocal,
         idUsuario: idUsuario,
+        idRota: idRota
       });
       return true;
     } catch (e) {
@@ -70,13 +29,14 @@ class geral {
     }
   };
   searchLog = async (idRonda) => {
-    const query = sequelize.sequelize.query(
+    try{
+    const query = await sequelize.sequelize.query(
       `
-      SELECT gerais.data, gerais.hora,gerais.latitude, gerais.longitude, l.nomeLocal, u.nomedeUsuario, r.nomeRota FROM gerais
+      SELECT gerais.data, gerais.hora,gerais.latitude, gerais.longitude, l.nomeLocal, u.nomedeUsuario, r.nomeRota, gerais.idRonda FROM gerais
       LEFT JOIN rondas as r on gerais.idRonda = r.idRonda
       LEFT JOIN usuarios as u on gerais.idUsuario = u.idUsuario
       LEFT JOIN locais as l on l.idLocal = gerais.idLocal
-      where r.idRonda = :idRonda;
+      where r.idRonda in (:idRonda);
       `,
       {
         replacements: {
@@ -85,10 +45,53 @@ class geral {
         type: sequelize.Sequelize.QueryTypes.SELECT,
       }
     );
-
-    console.log(query);
     return query;
+  }
+  catch(e){
+    return []
+  }
   };
+  logDataQuery = async (idRonda) =>{
+    try{
+    const query = await sequelize.sequelize.query(`
+      SELECT l.nomeLocal, r.nomeRota, rt.horario, g.data, g.hora, u.nomedeUsuario, g.latitude, g.longitude FROM gerais as g
+      LEFT JOIN locais as l on g.idLocal = l.idLocal
+      LEFT JOIN rotas as r on g.idRota = r.idRota
+      LEFT JOIN rotas_locais as rt on g.idRota = rt.idRota AND rt.idLocal = g.idLocal
+      LEFT JOIN usuarios as u on g.idUsuario = u.idUsuario
+      where g.idronda in (:idRonda);`,
+      {
+        replacements: {
+          idRonda: idRonda,
+        },
+        type: sequelize.Sequelize.QueryTypes.SELECT,
+      }
+      )
+      return query
+    }
+    catch(e){
+      return []
+    }
+
+  }
+  
+
+
+
+
+
+
+
+
+
+
 }
+// const geralFactory = {
+//   get geral(){
+//     return new geral()
+//   }
+// }
+
+
 
 module.exports = geral;

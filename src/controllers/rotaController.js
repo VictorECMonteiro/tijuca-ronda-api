@@ -6,10 +6,11 @@ const rotaCreateController = async (req, res, next) => {
   const fresult = await rotaService.createService(
     req.body.nomeRota,
     req.body.horarioInicio,
-    req.body.idLocal
+    req.body.idLocal,
+    req.body.horarioLocais,
   );
 
-  fresult
+  fresult === true
     ? res.status(200).send({ success: true, msg: "Rota criada com sucesso" })
     : res
         .status(400)
@@ -31,4 +32,36 @@ const listController = async (req, res) => {
     : res.status(200).send(fresult);
 };
 
-module.exports = { rotaCreateController, rotaDeleteController, listController };
+const listLocals = async (req,res) =>{
+  const dados = req.query
+
+  const fresult = await rotaService.listLocals(dados.idRota)
+
+  fresult.length === 0
+  ? res.status(400).send({success: false})
+  : res.status(200).send(fresult)
+
+}
+
+const defUserRota = async (req,res) => {
+  const dados = req.body
+
+  let fresult = await rotaService.defUserServ(dados.idRota, dados.idUsuario)
+
+  fresult === true?
+  res.status(200).send({success: true}):
+  res.status(400).send({success: false})
+}
+const changeLocalOrderController = async (req,res)=>{
+  const dados = req.body
+  let fresult = await rotaService.changeLocalOrderService(dados.listaAnterior, dados.listaAtual, dados.idRota)
+
+  fresult === true? res.status(200).send({success: true}): res.status(400).send({success: false})
+
+}
+
+
+
+
+
+module.exports = { rotaCreateController, rotaDeleteController, listController, listLocals, defUserRota, changeLocalOrderController };

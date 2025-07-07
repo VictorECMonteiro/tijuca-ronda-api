@@ -14,10 +14,11 @@ const loginControllerHandleCreator = async (req, res, next) => {
     req.body.nomedeUsuario,
     req.body.senhadeUsuario,
     req.body.permissao,
-    req.body.cpf
+    req.body.cpf,
+    req.body.idSetor
   );
   //Responde a requisição com base na resposta do service
-  fresult
+  fresult == true
     ? res.send({ success: true, err: 1, msg: "Login criado com sucesso" })
     : res.send({
         success: false,
@@ -55,8 +56,9 @@ const loginControllerGetUsers = async (req, res, next) => {
   res.status(200).send(fresult);
 };
 const verifyToken = async (req, res, next) => {
+  console.log("TOKEN VERIFICADO")
   res.status(200).send({
-    success: true,
+    success: true,  
   });
 };
 const loginControllerModify = async (req, res, next) => {
@@ -66,16 +68,22 @@ const loginControllerModify = async (req, res, next) => {
     dados.senhadeUsuarioAtual,
     dados.senhadeUsuarioNova
   );
-  console.log(fresult);
   if (fresult.success) {
     res.status(200).send(fresult);
   } else {
     res.status(400).send(fresult);
   }
 };
+const loginControllerUserDataModify = async (req,res, next)=>{
+  const dados = req.body;
+  const fresult = await loginService.userDataModifyService(dados)
+  fresult?res.status(200).send({success: true}): res.status(400).send({success: false})
+
+
+}
 const loginControllerDeactivate = async (req, res) => {
   const dados = req.body;
-  const fresult = await this.loginService.deactivateService(dados.idUsuario);
+  const fresult = await loginService.deactivateService(dados.idUsuario);
   fresult
     ? res
         .status(200)
@@ -92,4 +100,5 @@ module.exports = {
   verifyToken,
   loginControllerModify,
   loginControllerDeactivate,
+  loginControllerUserDataModify
 };

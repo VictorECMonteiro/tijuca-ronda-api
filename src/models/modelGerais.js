@@ -1,4 +1,5 @@
 const database = require("../configs/sequelize.js");
+const Observacao = require("../models/modelObservacao.js")
 // const Rotas = require("./modelRotas")
 
 const Geral = database.sequelize.define("gerais", {
@@ -29,5 +30,9 @@ const Geral = database.sequelize.define("gerais", {
     allowNull: false,
   },
 });
+
+Geral.hasMany(Observacao, {foreignKey: "idGeral"})
+
+
 
 module.exports = Geral;

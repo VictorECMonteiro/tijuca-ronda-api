@@ -1,6 +1,7 @@
 const database = require("../configs/sequelize.js");
 const Geral = require("./modelGerais.js");
-const Rotas = require("./ModelRotas.js");
+// const Rotas = require("./ModelRotas.js");
+const Rotas_Locais = require("../models/modelRotas_Locais.js")
 
 const Local = database.sequelize.define("locais", {
   idLocal: {
@@ -13,12 +14,20 @@ const Local = database.sequelize.define("locais", {
     type: database.Sequelize.STRING,
     allowNull: false,
   },
+  latitude: {
+    type: database.Sequelize.STRING,
+    allowNull: false
+  }, 
+  longitude: {
+    type: database.Sequelize.STRING,
+    allowNull: false
+  }
 });
 
 Local.hasMany(Geral, {
   foreignKey: "idLocal",
 });
-Local.hasMany(Rotas, {
+Local.hasMany(Rotas_Locais, {
   foreignKey: "idLocal",
 });
 

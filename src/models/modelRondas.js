@@ -1,8 +1,8 @@
 const database = require("../configs/sequelize.js");
-const Rotas = require("./ModelRotas.js");
 const Geral = require("./modelGerais.js");
+const Rotas = require("./modelRotas.js");
 
-const Ronda = database.sequelize.define("rondas", {
+var Ronda = database.sequelize.define("rondas", {
   idRonda: {
     primaryKey: true,
     type: database.Sequelize.INTEGER,
@@ -14,11 +14,11 @@ const Ronda = database.sequelize.define("rondas", {
   },
   horaInicio: {
     type: database.Sequelize.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   horaFim: {
     type: database.Sequelize.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   data: {
     type: database.Sequelize.STRING,
@@ -27,27 +27,16 @@ const Ronda = database.sequelize.define("rondas", {
   observacao: {
     type: database.Sequelize.STRING,
   },
-  idRota: {
+  status:{
     type: database.Sequelize.INTEGER,
-  },
-  //   idRota: {
-  //     type: database.Sequelize.INTEGER,
-  //     references: {
-  //       model: Rotas,   // Referência à tabela Rotas
-  //       key: "idRota",  // A chave primária de Rotas
-  //     },
-  //     allowNull: false,
-  //   },
+
+  }
 });
 
 // Relação: Uma Ronda tem vários Gerais
-Ronda.hasMany(Geral, { foreignKey: "idRonda" });
+Ronda.hasMany(Geral, { foreignKey: "idRonda"});
+Ronda.belongsTo(Rotas, {constraint: true, foreignKey: "idRota"});
 
-// Relação: Uma Ronda pertence a uma Rota
-// Ronda.belongsTo(Rotas, {
-//   foreignKey: "idRota", // Chave estrangeira em Rondas
-//   as: "rota",
-//   allowNull: false  // Alias para o relacionamento
-// });
+// Ronda.sync()
 
 module.exports = Ronda;
