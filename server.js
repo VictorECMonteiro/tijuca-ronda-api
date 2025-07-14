@@ -16,7 +16,9 @@ const geralRouter = require("./src/routes/geralRoutes");
 //Configurações
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}))
 app.use(cors());
+// app.use(express.urlencoded({extended: true}))
 //
 
 //Caso for Usar cookies, colocar diretamente o IP da maquina, se não, só o / já abrange tudo

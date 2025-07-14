@@ -54,8 +54,8 @@ class rondaQueries {
           });
           // console.log(retrievingLocals)
           for (let j = 0; j <= retrievingLocals.length - 1; j++) {
-            console.log(j);
-            console.log(retrievingLocals[j].idLocal);
+            // console.log(j);
+            // console.log(retrievingLocals[j].idLocal);
             const retrievingLocalsName = await registroLocal.findOne({
               where: {
                 idLocal: retrievingLocals[j].idLocal,
@@ -100,7 +100,7 @@ class rondaQueries {
       if (rotas.length === 0) {
         return false;
       }
-      console.log(rotas)
+      // console.log(rotas)
 
       for (let i = 0; i <= rotas.length - 1; i++) {
         await registroRonda.create({
@@ -219,65 +219,72 @@ class rondaQueries {
 
 
     try {
-      const rondaAtual = await sequelize.sequelize.query(
-        `select * from rondas as r
-         LEFT JOIN rotas as rt on rt.idRota = r.idRota
-         WHERE r.idRonda = :idRonda`,
-        {
-          replacements: {
-            idRonda: data.idRonda,
-          },
-          type: sequelize.Sequelize.QueryTypes.SELECT,
-        }
-      );
+      // const rondaAtual = await sequelize.sequelize.query(
+      //   `select * from rondas as r
+      //    LEFT JOIN rotas as rt on rt.idRota = r.idRota
+      //    WHERE r.idRonda = :idRonda`,
+      //   {
+      //     replacements: {
+      //       idRonda: data.idRonda,
+      //     },
+      //     type: sequelize.Sequelize.QueryTypes.SELECT,
+      //   }
+      // );
 
-      if (rondaAtual[0].status != 1) {
-        return false;
-      }
+      // if (rondaAtual[0].status != 1) {
+      //   return false;
+      // }
       
-      for (let i = 0; i <= data.locaisVisitados.length - 1; i++) {
-        await logClass.writeLog( 
-          rondaAtual[0].idUsuario,
-          data.idRonda,
-          data.latitude[i],
-          data.longitude[i],
-          data.locais[i],
-          horarioAtual,
-          rondaAtual[0].idRota
-        );
-      }
+      // for (let i = 0; i <= data.locaisVisitados.length - 1; i++) {
+      //   await logClass.writeLog( 
+      //     rondaAtual[0].idUsuario,
+      //     data.idRonda,
+      //     data.latitude[i],
+      //     data.longitude[i],
+      //     data.locais[i],
+      //     horarioAtual,
+      //     rondaAtual[0].idRota
+      //   );
+      // }
 
-      const compareHour = compararHora(
-        retornaHoras(),
-        retornaHorasComTolerancia(rondaAtual[0].horaInicio + 360)
-      );
-      if (compareHour == true) {
-        await registroRonda.update(
-          {
-            observacao: rondaAtual[0].observacao + "Atrasado ao Encerrar",
-            horaFim: retornaHoras(),
-            status: 2,
-          },
-          {
-            where: {
-              idRonda: data.idRonda,
-            },
-          }
-        );
-      } else {
-        await registroRonda.update(
-          {
-            horaFim: retornaHoras(),
-            status: 2,
-          },
-          {
-            where: {
-              idRonda: data.idRonda,
-            },
-          }
-        );
-      }
-      logClass = null
+      // const compareHour = compararHora(
+      //   retornaHoras(),
+      //   retornaHorasComTolerancia(rondaAtual[0].horaInicio + 360)
+      // );
+      // if (compareHour == true) {
+      //   await registroRonda.update(
+      //     {
+      //       observacao: rondaAtual[0].observacao + "Atrasado ao Encerrar",
+      //       horaFim: retornaHoras(),
+      //       status: 2,
+      //     },
+      //     {
+      //       where: {
+      //         idRonda: data.idRonda,
+      //       },
+      //     }
+      //   );
+      // } else {
+      //   await registroRonda.update(
+      //     {
+      //       horaFim: retornaHoras(),
+      //       status: 2,
+      //     },
+      //     {
+      //       where: {
+      //         idRonda: data.idRonda,
+      //       },
+      //     }
+      //   );
+      // }
+      // logClass = null
+      console.log("Encerrando Ronda...")
+      // console.debug(data)
+
+
+
+
+
       return true;
     } catch (e) {
       console.log(e);

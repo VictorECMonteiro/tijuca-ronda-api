@@ -159,20 +159,6 @@ class loginQueries {
       }
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   deactivate = async (idUsuario) => {
     try {
       const fresult = await registroVigia.update(

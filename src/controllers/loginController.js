@@ -42,7 +42,7 @@ const loginControllerHandle = async (req, res, next) => {
     req.body.senhadeUsuario
   );
   //Responde a requisição com resultado do service
-  console.log(fresult + "resultado final");
+  // console.log(fresult + "resultado final");
   fresult.success == true
     ? res.send(fresult)
     : res.status(400).json({ success: false });

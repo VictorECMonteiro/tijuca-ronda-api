@@ -1,3 +1,5 @@
+const { default: axios } = require("axios");
+const FormData = require('form-data');
 const rondaQueries = require("../repositories/rondaReposity");
 
 class rondaService {
@@ -21,8 +23,10 @@ class rondaService {
     }
   }
 
-  async pararRonda(data) {
-    // console.log(idRonda);
+  async pararRonda(data, filesBuffers) {
+    // console.log(filesBuffers)
+
+
     try {
       const fresult = await this.rondaQueriesL.encerraRonda(data);
       return fresult;

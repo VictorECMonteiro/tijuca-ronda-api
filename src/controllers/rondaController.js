@@ -1,5 +1,9 @@
+
 const Service = require("../services/rondaService");
 const rondaService = new Service();
+const FormData = require('form-data');
+const axios = require('axios');
+const fs = require("fs")
 
 const rondaCreateAndReturnController = async (req, res, next) => {
   const fresult = await rondaService.gerarRetornarRondas();
@@ -23,12 +27,60 @@ const rondaIniciarController = async (req, res, next) => {
 };
 
 const rondaStopController = async (req, res, next) => {
-  const dados = req.body;
+  const dados = await req.body;
+
+  const filesUpload = req.files; // multer output
+
+  const formData = new FormData();
+
+  filesUpload.forEach(file => {
+    formData.append('file', fs.createReadStream(file.buffer), {
+      filename: file.originalname,
+      contentType: file.mimetype,
+    });
+  });
+
+  const response = await axios.post('http://192.168.9.249:5050/index.php', formData, {
+    headers: formData.getHeaders(),
+  });
+
+  console.log(response.data);
+
+
+
+
+  // const filesUpload = await req.files
+
+
+  //   const formData = new FormData();
+
+
+  // filesUpload.forEach(file => {
+  //   formData.append(file.fileName, file);
+  // });
+
+
+  // console.log(filesUpload)
+  //   const response = await axios.post("http://192.168.9.249:5050/index.php", formData, {
+  //     headers: formData.getHeaders() })
+  //     console.log(response.data)
+
+
+  //   console.log("Resposta do PHP:");
+  //   console.log(response.data);
+  // } catch (err) {
+  //   console.error("Erro ao enviar arquivos:", err.message);
+  //   if (err.response) {
+  //     console.error("Resposta do servidor:", err.response.status, err.response.data);
+  //   }
+  // }
+
+
 
   const fresult = await rondaService.pararRonda(
-    dados
+    dados,
+    req.files
   );
-
   if (fresult) {
     res.status(200).send({
       success: true,
@@ -65,7 +117,7 @@ const pesquisarRondaLogsController = async (req, res) => {
     ? res.status(400).send({ success: false })
     : res.status(200).send(fresult);
 };
-const rondaFindAllController = async (req,res )=>{
+const rondaFindAllController = async (req, res) => {
   const dados = req.body;
   const fresult = await rondaService.rondaFindAll(dados.idRonda);
   fresult.length === 0
@@ -73,7 +125,7 @@ const rondaFindAllController = async (req,res )=>{
     : res.status(200).send(fresult);
 }
 
-const undoRonda = async (req,res)=>{
+const undoRonda = async (req, res) => {
   const dados = req.body
   const fresult = await rondaService.desfazerRonda(dados.idRonda)
   fresult === true
