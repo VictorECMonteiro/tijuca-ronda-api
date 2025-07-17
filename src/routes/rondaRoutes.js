@@ -6,7 +6,8 @@ const { admin, vigia } = require("../middlewares/permissaoMiddleware.js");
 const token = require("../middlewares/tokenMiddleware.js");
 const bodyParser = require("body-parser");
 const multer = require("multer")
-const upload = multer({ storage: multer.memoryStorage() });
+// const upload = multer({dest: './src'});
+const upload = multer({storage: multer.memoryStorage()});
 
 
 

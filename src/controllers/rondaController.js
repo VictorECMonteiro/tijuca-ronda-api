@@ -3,7 +3,9 @@ const Service = require("../services/rondaService");
 const rondaService = new Service();
 const FormData = require('form-data');
 const axios = require('axios');
-const fs = require("fs")
+const fs = require("fs");
+const sharṕ = require("sharp");
+const sharp = require("sharp");
 
 const rondaCreateAndReturnController = async (req, res, next) => {
   const fresult = await rondaService.gerarRetornarRondas();
@@ -31,20 +33,34 @@ const rondaStopController = async (req, res, next) => {
 
   const filesUpload = req.files; // multer output
 
-  const formData = new FormData();
+  console.log(filesUpload)
 
-  filesUpload.forEach(file => {
-    formData.append('file', fs.createReadStream(file.buffer), {
+  const formData = new FormData({maxDataSize: 5097152});
+
+  await filesUpload.forEach(async file => {
+
+    let compressedBuffer = await sharp(file.buffer).jpeg({ quality: 1 }).toBuffer();
+    // console.log(compressedBuffer)
+
+    await formData.append(file.originalname, compressedBuffer, {
       filename: file.originalname,
-      contentType: file.mimetype,
+      contentType: "image/jpeg",
     });
+
   });
 
-  const response = await axios.post('http://192.168.9.249:5050/index.php', formData, {
-    headers: formData.getHeaders(),
-  });
 
-  console.log(response.data);
+    
+
+    // const response = await axios.post('http://192.168.9.249:5050/index.php', formData, {
+    //   headers: formData.getHeaders(),
+    // });
+
+    // console.log(response.data);
+
+
+
+  // console.log(response.data);
 
 
 
@@ -81,17 +97,17 @@ const rondaStopController = async (req, res, next) => {
     dados,
     req.files
   );
-  if (fresult) {
-    res.status(200).send({
-      success: true,
-      msg: "Ronda Concluída",
-    });
-  } else {
-    res.status(400).send({
-      success: false,
-      msg: "Ronda já encerrada ou erro desconhecido",
-    });
-  }
+  // if (fresult) {
+  //   res.status(200).send({
+  //     success: true,
+  //     msg: "Ronda Concluída",
+  //   });
+  // } else {
+  //   res.status(400).send({
+  //     success: false,
+  //     msg: "Ronda já encerrada ou erro desconhecido",
+  //   });
+  // }
 };
 const rondaReturnLocalsController = async (req, res) => {
   const dados = req.query;
