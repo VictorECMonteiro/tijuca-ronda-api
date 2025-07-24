@@ -29,6 +29,9 @@ const Geral = database.sequelize.define("gerais", {
     type: database.Sequelize.STRING,
     allowNull: false,
   },
+  atrasado:{
+    type: database.Sequelize.INTEGER,
+  }
 });
 
 Geral.hasMany(Observacao, {foreignKey: "idGeral"})

@@ -5,7 +5,7 @@ var jwt = require("jsonwebtoken");
 const { where } = require("sequelize");
 
 class loginQueries {
-  constructor() {}
+  constructor() { }
   //Lida com a Query de criar login de usuario(Admin)
   createLogin = (nomedeUsuario, senhadeUsuario, permissao, cpf, idSetor) => {
     //Cria login de usuário com criptografia no banco
@@ -104,34 +104,35 @@ class loginQueries {
       console.log(e);
     }
   };
-
+  //Modifica senha do usuário. Primeiro chece se senhadeUsuarioAtual é verdadeira, e após isso efetua a modificação de senha com o metodo .update
   modifyPassword = async (
     idUsuario,
     senhadeUsuarioAtual,
     senhadeUsuarioNova
   ) => {
     try {
+      //Procura um usuário utilizando idUsuario
       const fresult = await registroVigia.findOne({
         where: {
           idUsuario: idUsuario,
         },
       });
 
+      //Usa o bcrypt.compare para verificar se a senha recebida em senhadeUsuarioAtual está correta
       const authResult = await bcrypt.compare(
         senhadeUsuarioAtual,
         fresult.senhadeUsuario
       );
-
-      console.log(authResult);
-      console.log("VERIFIQUEI SENHA");
+      //Condicional que quebra as demais rotina caso a senha recebida em senhadeUsuarioAtual estiver incorreta
       if (!authResult) {
         return {
           success: false,
           msg: "Senha Incorreta",
         };
       }
-      console.log("IREI GERAR A NOVA SENHA");
+      //Usa bcrypt para gerar um hash/salt com a senhadeUsuarioNova
       const hashedPassword = await bcrypt.hash(senhadeUsuarioNova, 10);
+      //Atualiza o valor da linha na tabela do usuario correspondente com o hash do gerado a partir de senhadeUsuarioNova
       await registroVigia.update(
         { senhadeUsuario: hashedPassword },
         { where: { idUsuario: idUsuario } }
@@ -143,22 +144,22 @@ class loginQueries {
       return { success: false, msg: "Erro ao alterar senha" };
     }
   };
-
-  modifyUserData = async (dados) =>{
-    try{
+  //Modifica os dados basicos de usuario, como CPF, nome, setor.
+  modifyUserData = async (dados) => {
+    try {
       for (let key in dados) {
         if (dados[key]) {
           json[key.toString()] = dados[key];
         }
       }
-      registroVigia.update(json, {where:{idUsuario:dados.idUsuario}})
+      registroVigia.update(json, { where: { idUsuario: dados.idUsuario } })
       return true
-      }
-      catch(E){
-        return false
-      }
+    }
+    catch (E) {
+      return false
+    }
   }
-
+  //Desativa o usuário modificando o campo status para 0 (quando um usuario é criado, automaticamente ẽ criado com status: 1)
   deactivate = async (idUsuario) => {
     try {
       const fresult = await registroVigia.update(

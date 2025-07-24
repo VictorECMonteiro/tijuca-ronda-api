@@ -93,6 +93,24 @@ const loginControllerDeactivate = async (req, res) => {
         .send({ success: true, msg: "Erro ao dewsativar o usuário" });
 };
 
+const loginDefineProfilePicture = async (req,res) =>{
+    const files = req.files
+    const fresult = await loginService.uploadProfilePicture(req.files)
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
 module.exports = {
   loginControllerHandleCreator,
   loginControllerHandle,

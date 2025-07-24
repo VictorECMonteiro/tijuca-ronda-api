@@ -8,9 +8,10 @@ class geral {
   constructor() {
 
   }
-
-  writeLog = async (idUsuario, idRonda, latitude, longitude, idLocal, hora, idRota) => {
+  //Registra na tabela de geral o local de uma ronda que foi escaneado e retorna a linha criada
+  writeLog = async (idUsuario, idRonda, latitude, longitude, idLocal, hora, idRota, atrasado) => {
     try {
+      //Query inserindo registro na tabela
       const writeLogInTable = await modelGeral.create({
         latitude: latitude,
         longitude: longitude,
@@ -20,16 +21,22 @@ class geral {
         idRonda: idRonda,
         idLocal: idLocal,
         idUsuario: idUsuario,
-        idRota: idRota
+        idRota: idRota,
+        atrasado: atrasado
       });
-      return true;
+      return writeLogInTable;
     } catch (e) {
       console.log(e);
       return false;
     }
   };
+
+  //Pesquisa na tabela geral todas as linhas de um intervalo de idRonda
   searchLog = async (idRonda) => {
     try{
+
+
+      //Query pesquisando usando o array vindo de idRonda
     const query = await sequelize.sequelize.query(
       `
       SELECT gerais.data, gerais.hora,gerais.latitude, gerais.longitude, l.nomeLocal, u.nomedeUsuario, r.nomeRota, gerais.idRonda FROM gerais
