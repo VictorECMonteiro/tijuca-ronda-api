@@ -27,6 +27,10 @@ class geralsService {
     const fresult = await geralsQueries.logDataQuery(idRonda)
     return fresult
   }
+  getDataLog = async (idRonda) =>{
+    const fresult = await geralsQueries.getAndMountDataLog(idRonda)
+    
+  }
 
 }
 

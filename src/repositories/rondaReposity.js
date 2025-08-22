@@ -215,7 +215,16 @@ class rondaQueries {
 
 
 
-      if (!locationIsNull && todosLocaisPresente) {
+      if (true) {
+        await registroRonda.update({
+            status: 2,
+            horaFim: retornaHoras()
+          }, {
+            where: {
+              idRonda: jsonData.idRonda
+            }
+          })
+
         for (let i = 0; i <= locaisData.length - 1; i++) {
           let estaNoLocal = calculateToleranceOfLocation({ latitudeUsuario: JSON.parse(data.latitude)[i], longitudeUsuario: JSON.parse(data.longitude)[i] }, { latitudeLocal: locaisData[i].latitude, longitudeLocal: locaisData[i].longitude }, 100);
 
@@ -234,15 +243,7 @@ class rondaQueries {
             await observacaoClassInstance.insertObservacao(jsonData.observacoesLocais[i].observacao, logRegistry.idGeral);
           }
 
-          await registroRonda.update({
-            status: 2,
-            horaFim: retornaHoras()
-          }, {
-            where: {
-              idRonda: jsonData.idRonda
-            }
-          })
-
+          
 
         }
       }

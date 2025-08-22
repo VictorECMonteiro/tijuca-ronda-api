@@ -3,12 +3,13 @@ const Service = require("../services/rondaService");
 const rondaService = new Service();
 
 const rondaCreateAndReturnController = async (req, res, next) => {
+  //Controller que cria e retorna as rondas para o usuário
   const fresult = await rondaService.gerarRetornarRondas();
-  // console.log(fresult);
   res.send(fresult);
 };
 
 const rondaIniciarController = async (req, res, next) => {
+  //Controller que inicia uma ronda no app mobile
   const dados = req.body;
   const fresult = await rondaService.iniciarRonda(
     dados.idRonda
@@ -24,9 +25,8 @@ const rondaIniciarController = async (req, res, next) => {
 };
 
 const rondaStopController = async (req, res, next) => {
+  //Controller que encerra uma ronda, faz upload dos arquivos de observação
   const dados = await req.body;
-
-  const filesUpload = req.files; // multer output
 
   const fresult = await rondaService.pararRonda(
     dados,
@@ -45,8 +45,9 @@ const rondaStopController = async (req, res, next) => {
   }
 };
 const rondaReturnLocalsController = async (req, res) => {
+  //Retorna os locais visitados de uma ronda, não mais em uso
   const dados = req.query;
-  // console.log(req.query);
+
   const fresult = await rondaService.retornaLocaisVisitados(dados.idRonda);
   if (fresult.length == 0 || undefined) {
     res.status(400).send({ success: false });
@@ -77,6 +78,8 @@ const rondaFindAllController = async (req, res) => {
 }
 
 const undoRonda = async (req, res) => {
+  //Desfaz ronda, usado para fins de debug
+   
   const dados = req.body
   const fresult = await rondaService.desfazerRonda(dados.idRonda)
   fresult === true

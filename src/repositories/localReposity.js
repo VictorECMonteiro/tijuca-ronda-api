@@ -11,8 +11,8 @@ class localQueries {
     try {
       const fresult = await modelLocal.create({
         nomeLocal: nomeLocal,
-        latitude: latitude,
-        longitude: longitude,
+        latitude: String(latitude),
+        longitude: String(longitude),
         idSetor: idSetor
       });
       return true;

@@ -81,7 +81,25 @@ class geral {
     }
 
   }
-  
+  getAndMountDataQuery = async (idRonda) => {
+    try{
+      
+
+
+
+
+
+
+    }
+    catch(e){
+
+
+
+      
+
+    }
+
+  }
 
 
 

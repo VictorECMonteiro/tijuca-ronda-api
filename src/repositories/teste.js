@@ -1,10 +1,21 @@
+const sequelize = require("../configs/sequelize");
 const rotaLocalReposityClass = require("../repositories/rotaLocalreposity");
-const rotaLocalreposityInstance = new rotaLocalReposityClass();
+// const rotaLocalreposityInstance = new rotaLocalReposityClass();
+// const modelGerais = require("../models/modelGerais")
+// const modelRotas_Locais = require("../models/modelRotas_Locais")
+// const modelRotas = require("../models/modelRotas")
+// const modelRondas = require("../models/modelRondas")
 
 
 async function teste(){
   // let array1 = [23,25,50,60]
   // let array2 = [50,25,23,60]
+
+  // const fresult = await modelRondas.findAll({
+  //   include: modelRotas
+  // })
+
+
 
   // for(let i = 0; i<=array1.length - 1; i++){
   //   if(array1[i] === array2[i]){
@@ -20,8 +31,61 @@ async function teste(){
   //     }
   //   }
   // }
-  const fresult = await rotaLocalreposityInstance.changeOrder([2],[3], 4);
-  console.log(fresult);
+  // const fresult = await rotaLocalreposityInstance.changeOrder([2],[3], 4);
+  let jsonResposta = {}
+
+
+
+
+  let fresult = await sequelize.sequelize.query(`
+SELECT 
+    r.idRonda,
+    r.nomeRota,
+    GROUP_CONCAT(g.idGeral) AS gerais_ids,
+    GROUP_CONCAT(o.id) AS observacoes_ids,
+    GROUP_CONCAT(o.observacao) AS observacoes_textos
+FROM rondas r
+LEFT JOIN gerais g ON g.idRonda = r.idRonda
+LEFT JOIN observacaos o ON g.idGeral = o.idGeral
+WHERE r.idRonda IN (169, 173)
+GROUP BY r.idRonda, r.nomeRota;
+
+`,
+    {
+      type: sequelize.Sequelize.QueryTypes.SELECT
+    }
+  )
+
+  fresult.forEach(element => {
+    jsonResposta.idRonda = element.idRonda
+    jsonResposta.nomeRota = element.nomeRota
+    jsonResposta.idGeralList = element.gerais_ids.split(',').map(Number)
+    jsonResposta.observacoesList = {
+      observacao_id: element.gerais_ids.split(',').map(Number),
+      observacoes: element.observacoes_textos.split(',') | null
+    }
+
+
+
+
+
+
+    
+  });
+
+
+
+  
+
+
+
+
+
+
+
+
+console.log(jsonResposta)
+  // console.log(fresult);
 }
 
 

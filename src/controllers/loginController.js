@@ -50,12 +50,13 @@ const loginControllerHandle = async (req, res, next) => {
   // res.send(fresult)
 };
 const loginControllerGetUsers = async (req, res, next) => {
-  console.log("cheguei aqui");
+  //Controller que retorna usuários contidos no banco
   const fresult = await loginService.getUsers();
 
   res.status(200).send(fresult);
 };
 const verifyToken = async (req, res, next) => {
+  //Verifica o token através, em essencia, se chegar a essa camada ele somente responde porque se chegou aquim o token é valido
   console.log("TOKEN VERIFICADO")
   res.status(200).send({
     success: true,  
@@ -82,6 +83,7 @@ const loginControllerUserDataModify = async (req,res, next)=>{
 
 }
 const loginControllerDeactivate = async (req, res) => {
+  //Desativa um usuário no banco de dados
   const dados = req.body;
   const fresult = await loginService.deactivateService(dados.idUsuario);
   fresult
@@ -90,18 +92,14 @@ const loginControllerDeactivate = async (req, res) => {
         .send({ success: true, msg: "Usuario desativado com sucesso" })
     : res
         .status(400)
-        .send({ success: true, msg: "Erro ao dewsativar o usuário" });
+        .send({ success: true, msg: "Erro ao desativar o usuário" });
 };
 
 const loginDefineProfilePicture = async (req,res) =>{
+    //Rota para definir foto de perfil, em teoria funciona...
     const files = req.files
     const fresult = await loginService.uploadProfilePicture(req.files)
-
-
-
-
-
-
+    res.send({"success": true})
 
 }
 
