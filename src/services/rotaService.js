@@ -45,11 +45,9 @@ class rotaService {
   }
   async changeLocalOrderService(listaAnterior, listaAtual, idRota) {
     //Service para lidar com a mudança de ordem de locais
-    // console.log(listaAnterior)
-    // console.log(listaAtual)
 
     for (let i = 0; i <= listaAnterior.length - 1; i++) {
-      //Percorre todo o array e inverte a ordem na lista
+      //Percorre todo o array e remove iguais inversos na lista
       if (listaAnterior[i] === listaAtual[i]) {
         listaAnterior.splice(i, i + 1);
         listaAtual.splice(i, i + 1);

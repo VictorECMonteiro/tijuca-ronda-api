@@ -33,57 +33,75 @@ class geral {
 
   //Pesquisa na tabela geral todas as linhas de um intervalo de idRonda
   searchLog = async (idRonda) => {
-    try{
+    try {
 
 
       //Query pesquisando usando o array vindo de idRonda
-    const query = await sequelize.sequelize.query(
-      `
+      const query = await sequelize.sequelize.query(
+        `
       SELECT gerais.data, gerais.hora,gerais.latitude, gerais.longitude, l.nomeLocal, u.nomedeUsuario, r.nomeRota, gerais.idRonda FROM gerais
       LEFT JOIN rondas as r on gerais.idRonda = r.idRonda
       LEFT JOIN usuarios as u on gerais.idUsuario = u.idUsuario
       LEFT JOIN locais as l on l.idLocal = gerais.idLocal
       where r.idRonda in (:idRonda);
       `,
-      {
-        replacements: {
-          idRonda: idRonda,
-        },
-        type: sequelize.Sequelize.QueryTypes.SELECT,
-      }
-    );
-    return query;
-  }
-  catch(e){
-    return []
-  }
+        {
+          replacements: {
+            idRonda: idRonda,
+          },
+          type: sequelize.Sequelize.QueryTypes.SELECT,
+        }
+      );
+      return query;
+    }
+    catch (e) {
+      return []
+    }
   };
-  logDataQuery = async (idRonda) =>{
-    try{
-    const query = await sequelize.sequelize.query(`
+  logDataQuery = async (idRonda) => {
+    try {
+      const query = await sequelize.sequelize.query(`
       SELECT l.nomeLocal, r.nomeRota, rt.horario, g.data, g.hora, u.nomedeUsuario, g.latitude, g.longitude FROM gerais as g
       LEFT JOIN locais as l on g.idLocal = l.idLocal
       LEFT JOIN rotas as r on g.idRota = r.idRota
       LEFT JOIN rotas_locais as rt on g.idRota = rt.idRota AND rt.idLocal = g.idLocal
       LEFT JOIN usuarios as u on g.idUsuario = u.idUsuario
       where g.idronda in (:idRonda);`,
-      {
-        replacements: {
-          idRonda: idRonda,
-        },
-        type: sequelize.Sequelize.QueryTypes.SELECT,
-      }
+        {
+          replacements: {
+            idRonda: idRonda,
+          },
+          type: sequelize.Sequelize.QueryTypes.SELECT,
+        }
       )
       return query
     }
-    catch(e){
+    catch (e) {
       return []
     }
 
   }
   getAndMountDataQuery = async (idRonda) => {
-    try{
-      
+    try {
+      let jsonResposta = [];
+      let fresult = await sequelize.sequelize.query(
+        `
+      SELECT g.*, o.*, r.nomeRota, r.horaInicio, r.horaFim, r.data from rondas as r
+      LEFT JOIN gerais as g on g.idRonda = r.idRonda
+      LEFT JOIN observacaos as o on o.idGeral = g.idGeral;
+    `, {
+        type: sequelize.Sequelize.QueryTypes.SELECT
+      })
+      for (let i = 0; i <= fresult.length - 1; i++) {
+        if (!jsonResposta.some((item) => item.idRonda === fresult[i].idRonda)) {
+          let index = jsonResposta.push({ idRonda: fresult[i].idRonda, data: [] }) - 1
+          jsonResposta[index].data.push(JSON.stringify(fresult[i]))
+        }
+        else {
+          let index = jsonResposta.findIndex((item) => item.idRonda === fresult[i].idRonda)
+          jsonResposta[index].data.push(JSON.stringify(fresult[i]))
+        }
+      }
 
 
 
@@ -91,11 +109,11 @@ class geral {
 
 
     }
-    catch(e){
+    catch (e) {
 
 
 
-      
+
 
     }
 
