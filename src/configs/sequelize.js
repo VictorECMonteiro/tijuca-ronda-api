@@ -2,8 +2,9 @@ const Sequelize = require("sequelize");
 require("dotenv").config();
 const sequelize = new Sequelize("tijucaronda2", "root", process.env.dbKey, {
   timezone: "-03:00",
-  host: "localhost",
+  host: process.env.ipDB,
   dialect: "mysql",
+  port: process.env.dbPort,
   define: {
     timestamps: false,
   },

@@ -2,6 +2,7 @@ const { default: axios } = require("axios");
 const FormData = require('form-data');
 const rondaQueries = require("../repositories/rondaReposity");
 const sharp = require("sharp")
+require("dotenv").config();
 const formDataToJSON = require("../utils/formDataToJSON")
 class rondaService {
   rondaQueriesL = new rondaQueries();
@@ -38,7 +39,7 @@ class rondaService {
       });
     }
 
-    const response = await axios.post('http://192.168.9.249:5050/index.php', formData, {
+    const response = await axios.post(`http://${process.env.ipBase}:5050/index.php`, formData, {
       headers: formData.getHeaders(),
     });
 

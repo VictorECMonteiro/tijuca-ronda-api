@@ -83,18 +83,24 @@ class geral {
   }
   getAndMountDataQuery = async (idRonda) => {
     try {
+
       let jsonResposta = [];
+
       let fresult = await sequelize.sequelize.query(
         `
-      SELECT g.*, o.*, r.nomeRota, r.horaInicio, r.horaFim, r.data from rondas as r
-      LEFT JOIN gerais as g on g.idRonda = r.idRonda
-      LEFT JOIN observacaos as o on o.idGeral = g.idGeral;
-    `, {
-        type: sequelize.Sequelize.QueryTypes.SELECT
+            SELECT g.idGeral, g.latitude, g.longitude, g.data, g.hora, g.idLocal, g.atrasado, o.*, r.nomeRota, r.horaInicio, r.horaFim, r.data, r.idUsuario, r.idRonda, r.idRota from rondas as r
+            LEFT JOIN gerais as g on g.idRonda = r.idRonda
+            LEFT JOIN observacaos as o on o.idGeral = g.idGeral
+            WHERE r.idRonda = :idRonda;
+          `, {
+        type: sequelize.Sequelize.QueryTypes.SELECT,
+        replacements:{
+          idRonda:idRonda
+        }
       })
       for (let i = 0; i <= fresult.length - 1; i++) {
         if (!jsonResposta.some((item) => item.idRonda === fresult[i].idRonda)) {
-          let index = jsonResposta.push({ idRonda: fresult[i].idRonda, data: [] }) - 1
+          let index = jsonResposta.push({ idRonda: fresult[i].idRonda, data: [], idRota: fresult[i].idRota, locais: [] }) - 1
           jsonResposta[index].data.push(JSON.stringify(fresult[i]))
         }
         else {
@@ -102,19 +108,26 @@ class geral {
           jsonResposta[index].data.push(JSON.stringify(fresult[i]))
         }
       }
+      let getLocaisFromRoutes = await sequelize.sequelize.query(`          
+                SELECT l.nomeLocal, rl1.horario, rl1.idLocal, rl1.id FROM rotas_locais as rl1
+                LEFT JOIN locais as l on rl1.idLocal = l.idLocal
+                WHERE rl1.idRota = :idRota;`,
+        {
+          type: sequelize.Sequelize.QueryTypes.SELECT,
+          replacements: {
+            idRota: jsonResposta[0].idRota
+          }
+        })
+
+      jsonResposta[0].locais.push(JSON.stringify(getLocaisFromRoutes))
 
 
-
-
+      return jsonResposta;
 
 
     }
     catch (e) {
-
-
-
-
-
+      return []
     }
 
   }
