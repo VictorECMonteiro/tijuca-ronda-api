@@ -98,6 +98,7 @@ const loginControllerDeactivate = async (req, res) => {
 const loginDefineProfilePicture = async (req,res) =>{
     //Rota para definir foto de perfil, em teoria funciona...
     const files = req.files
+    console.log(req.files)
     const fresult = await loginService.uploadProfilePicture(req.files)
     res.send({"success": true})
 
@@ -116,5 +117,6 @@ module.exports = {
   verifyToken,
   loginControllerModify,
   loginControllerDeactivate,
-  loginControllerUserDataModify
+  loginControllerUserDataModify,
+  loginDefineProfilePicture
 };

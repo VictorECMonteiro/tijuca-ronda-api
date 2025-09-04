@@ -26,7 +26,7 @@ class rondaService {
   }
 
   async pararRonda(data, filesUpload) {
-    console.log(data)
+    
     const formData = new FormData({ maxDataSize: 5097152 });
 
     for (let i = 0; i <= filesUpload.length - 1; i++) {

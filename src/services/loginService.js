@@ -1,6 +1,7 @@
 const { default: axios } = require("axios");
 const loginQueries = require("../repositories/loginReposity");
 const loginValidator = require("../validators/loginValidator");
+const FormData = require('form-data');
 const sharp = require("sharp");
 require("dotenv").config();
 
@@ -70,47 +71,30 @@ class loginServices {
   };
 
   uploadProfilePicture = async (arquivos) => {
-    
     let formData = new FormData()
 
-
-    for (let i = 0; i <= filesUpload.length - 1; i++) {
+    // console.log(arquivos)
+    for (let i = 0; i <= arquivos.length - 1; i++) {
 
       let compressedBuffer = await sharp(arquivos[i].buffer).jpeg({ quality: 50 }).toBuffer();
 
-      formData.append(arquivos[i].originalname, compressedBuffer, {
+      // console.log(compressedBuffer)
+
+      formData.append(arquivos[i].fieldname, compressedBuffer, {
         filename: arquivos[i].originalname,
-        contentType: "image/jpeg",
+        contentType: "image/jpeg"
       });
     }
 
+    let resposta = await axios.post(`http://${process.env.ipBase}:5050/index.php`, formData);
 
 
-
-    let resposta = await axios.post("http://192.168.9.249:5050/index.php", formData);
-    
-
-
-    if((JSON.parse(resposta)).success === true){
+    if(resposta.data.success === true){
       return true
     }
     return false
 
-    
-
-
-
-
-
-
-
-
   }
-
-
-
-
-
 
 }
 

@@ -118,15 +118,17 @@ class geral {
             idRota: jsonResposta[0].idRota
           }
         })
+        // console.log(getLocaisFromRoutes)
 
-      jsonResposta[0].locais.push(JSON.stringify(getLocaisFromRoutes))
+      jsonResposta[0].locais = getLocaisFromRoutes
 
 
-      return jsonResposta;
+      return jsonResposta[0];
 
 
     }
     catch (e) {
+      console.log(e)
       return []
     }
 
