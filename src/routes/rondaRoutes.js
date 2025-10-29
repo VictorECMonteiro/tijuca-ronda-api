@@ -5,9 +5,18 @@ const rondaController = require("../controllers/rondaController.js");
 const { admin, vigia } = require("../middlewares/permissaoMiddleware.js");
 const token = require("../middlewares/tokenMiddleware.js");
 const bodyParser = require("body-parser");
+const multer = require("multer")
+// const upload = multer({dest: './src'});
+const upload = multer({storage: multer.memoryStorage()});
+
+
+
+
+
 require("dotenv").config();
 //Configs
 router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({extended: true}))
 
 router.get("/createAndReturn", rondaController.rondaCreateAndReturnController);
 
@@ -15,7 +24,7 @@ router.get("/listLocals", rondaController.rondaReturnLocalsController);
 
 router.post("/begin", rondaController.rondaIniciarController);
 
-router.post("/stop", rondaController.rondaStopController);
+router.post("/stop", upload.any(),rondaController.rondaStopController);
 
 router.post("/search", rondaController.pesquisarRondaController);
 

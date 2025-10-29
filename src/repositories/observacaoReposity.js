@@ -3,7 +3,7 @@ const obsModel = require("../models/modelObservacao");
 
 class observacao {
     constructor() { }
-
+    //Insere linha na tabela observação
     insertObservacao = async (txtObservacao, idGeral) => {
         let insert = await obsModel.create(
             {
@@ -30,3 +30,6 @@ class observacao {
 
     
 }
+
+
+module.exports = observacao

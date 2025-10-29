@@ -9,23 +9,19 @@ const date = require("../utils/date");
 const retornaHoras = require("../utils/retornaHoras");
 const retornaHorasComTolerancia = require("../utils/retornaHorasComTolerancia");
 const Rotas_Locais = require("../models/modelRotas_Locais");
+let observacaoClass = require("../repositories/observacaoReposity")
 let logClassInstance = require("./geralReposity");
+let localClass = require("../repositories/localReposity");
+const calculateToleranceOfLocation = require("../utils/calculateToleranceOfLocation");
+const formDataToJson = require("../utils/formDataToJSON");
+const cleanFormDataObject = require("../utils/formDataToJSON");
 
 require("dotenv").config();
 
-// const dumbData = {
-//   idRonda: 3,
-//   idUsuario: 1,
-//   horario: ["13:00", "13:00"],
-//   locais:  [1, 2],
-//   locaisVisitados: [1,2],
-//   latitude: [-3.8565266, -3.8565266],
-//   longitude: [-38.5100779, -38.5100779]
-// }
 
 //CLASS RONDAS: INTERAÇÂO E OPERAÇÔES COM TABELA RONDAS NO SQL
 class rondaQueries {
-  constructor() {}
+  constructor() { }
 
   //GERA E RETORNA RONDAS DA DATA ATUAL PARA O APP TIJUCA RONDA, CASO NAO TENHA AINDA RONDAS COM A DATA ATUAL NO BANCO, AS GERA AUTOMATICAMENTE
 
@@ -48,14 +44,13 @@ class rondaQueries {
         }
       } else {
         let fresposta = [];
+        //Para cada item de resposta, resgata os de locais e rotas na tabela rota_locais e incrementa em um json
         for (let i = 0; i <= resposta.length - 1; i++) {
           const retrievingLocals = await Rotas_Locais.findAll({
             where: { idRota: resposta[i].idRota },
           });
-          // console.log(retrievingLocals)
           for (let j = 0; j <= retrievingLocals.length - 1; j++) {
-            console.log(j);
-            console.log(retrievingLocals[j].idLocal);
+
             const retrievingLocalsName = await registroLocal.findOne({
               where: {
                 idLocal: retrievingLocals[j].idLocal,
@@ -63,11 +58,10 @@ class rondaQueries {
             });
             retrievingLocals[j].dataValues["nomeLocal"] =
               retrievingLocalsName.nomeLocal;
-            // console.log(retrievingLocalsName.nomeLocal)
-            // console.log(retrievingLocals)
-          }
-          // console.log(retrievingLocals)
 
+          }
+
+          //Encontra a rota de cada ronda e incrementa no JSON
           const retrievingRoute = await registroRota.findOne({
             where: {
               idRota: resposta[i].dataValues.idRota,
@@ -76,7 +70,7 @@ class rondaQueries {
           fresposta.push({
             ...resposta[i].dataValues, // Keep original response data
             retrievingLocals,
-            retrievingRoute, 
+            retrievingRoute,
           });
         }
 
@@ -88,19 +82,19 @@ class rondaQueries {
       return { success: false };
     }
   }
-  //REFAZER
+  
   async rondaCriar() {
     try {
       // const rotas = await registroRota.findAll();
 
       let rotas = await sequelize.sequelize.query(`
         SELECT rotas.*, ru.idUsuario from rotas
-        LEFT JOIN rota_users as ru on rotas.idRota = ru.idRota;`, {type: sequelize.Sequelize.QueryTypes.SELECT})
+        LEFT JOIN rota_users as ru on rotas.idRota = ru.idRota;`, { type: sequelize.Sequelize.QueryTypes.SELECT })
 
       if (rotas.length === 0) {
         return false;
       }
-      console.log(rotas)
+      // console.log(rotas)
 
       for (let i = 0; i <= rotas.length - 1; i++) {
         await registroRonda.create({
@@ -110,7 +104,7 @@ class rondaQueries {
           idUsuario: rotas[i].idUsuario,
           status: 0,
         }, {
-          
+
         });
       }
 
@@ -129,7 +123,7 @@ class rondaQueries {
       });
 
       return resposta;
-    } catch (e) {}
+    } catch (e) { }
   }
 
   //METODO PARA INICIAR RONDA, USA-SE ""
@@ -195,7 +189,7 @@ class rondaQueries {
       return {
         idRonda: rondaAtual.idRonda,
         horario: horario,
-        locais: locais,
+        locais: locais
       };
     } catch (e) {
       console.log(e);
@@ -205,82 +199,71 @@ class rondaQueries {
   //REFAZER
   async encerraRonda(data) {
     let logClass = new logClassInstance()
+    let localClassInstance = new localClass()
+    let observacaoClassInstance = new observacaoClass();
     let horarioAtual = retornaHoras()
 
 
-
-// observacoes: [
-//  {idLocal: ["observação1", "observação2"]}
-// ]
-//
-
-
-
-
-
     try {
-      const rondaAtual = await sequelize.sequelize.query(
-        `select * from rondas as r
-         LEFT JOIN rotas as rt on rt.idRota = r.idRota
-         WHERE r.idRonda = :idRonda`,
-        {
-          replacements: {
-            idRonda: data.idRonda,
-          },
-          type: sequelize.Sequelize.QueryTypes.SELECT,
+      let jsonData = cleanFormDataObject(data)
+      let locaisData = await localClassInstance.listByIDList(jsonData.locais)
+
+
+      let locationIsNull = (jsonData.latitude).length === 0;
+      let todosLocaisPresente = jsonData.locais.length === jsonData.locaisVisitados.length;
+
+
+
+
+      if (true) {
+        await registroRonda.update({
+            status: 2,
+            horaFim: retornaHoras()
+          }, {
+            where: {
+              idRonda: jsonData.idRonda
+            }
+          })
+
+        for (let i = 0; i <= locaisData.length - 1; i++) {
+          let estaNoLocal = calculateToleranceOfLocation({ latitudeUsuario: JSON.parse(data.latitude)[i], longitudeUsuario: JSON.parse(data.longitude)[i] }, { latitudeLocal: locaisData[i].latitude, longitudeLocal: locaisData[i].longitude }, 100);
+
+          let logRegistry = await logClass.writeLog(
+            jsonData.idUsuario,
+            jsonData.idRonda,
+            jsonData.latitude[i],
+            jsonData.longitude[i],
+            jsonData.locais[i],
+            jsonData.horariosVisitados[i],
+            jsonData.locaisDados[i].idRota,
+            compararHora(jsonData.horariosVisitados[i], jsonData.locaisDados[i].horario) ? 1 : 0
+          )
+
+          if (jsonData.observacoesLocais[i].observacao != "Sem Observações") {
+            await observacaoClassInstance.insertObservacao(jsonData.observacoesLocais[i].observacao, logRegistry.idGeral);
+          }
+
+          
+
         }
-      );
-
-      if (rondaAtual[0].status != 1) {
-        return false;
       }
-      
-      for (let i = 0; i <= data.locaisVisitados.length - 1; i++) {
-        await logClass.writeLog( 
-          rondaAtual[0].idUsuario,
-          data.idRonda,
-          data.latitude[i],
-          data.longitude[i],
-          data.locais[i],
-          horarioAtual,
-          rondaAtual[0].idRota
-        );
+      else{
+          await registroRonda.update({
+            status: 0,
+            horaFim: retornaHoras()
+          }, {
+            where: {
+              idRonda: jsonData.idRonda
+            }
+          })
+          return false
+
       }
 
-      const compareHour = compararHora(
-        retornaHoras(),
-        retornaHorasComTolerancia(rondaAtual[0].horaInicio + 360)
-      );
-      if (compareHour == true) {
-        await registroRonda.update(
-          {
-            observacao: rondaAtual[0].observacao + "Atrasado ao Encerrar",
-            horaFim: retornaHoras(),
-            status: 2,
-          },
-          {
-            where: {
-              idRonda: data.idRonda,
-            },
-          }
-        );
-      } else {
-        await registroRonda.update(
-          {
-            horaFim: retornaHoras(),
-            status: 2,
-          },
-          {
-            where: {
-              idRonda: data.idRonda,
-            },
-          }
-        );
-      }
-      logClass = null
       return true;
     } catch (e) {
       console.log(e);
+      return false
     }
   }
   //MANTER, SO ADICIONAR IDUSUARIO NA QUERY DE RETORNO
@@ -338,13 +321,15 @@ class rondaQueries {
             idLocal: retrievingLocals[j].idLocal,
           },
         });
-        retrievingLocals[j].dataValues["nomeLocal"] =retrievingLocalsName.nomeLocal;
+        retrievingLocals[j].dataValues["nomeLocal"] = retrievingLocalsName.nomeLocal;
 
       }
 
-      const retrievingRoute = await registroRota.findOne({where:{
-        idRota: resposta.dataValues.idRota
-      }})
+      const retrievingRoute = await registroRota.findOne({
+        where: {
+          idRota: resposta.dataValues.idRota
+        }
+      })
       fresposta.push({
         ...resposta.dataValues, // Keep original response data
         retrievingLocals,
@@ -357,28 +342,28 @@ class rondaQueries {
     }
   }
   //Transformar em pesquisar ronda com filtro
-  async returnAll(){
-    try{
-        const findAll = await registroRonda.findAll()
-        return findAll;
+  async returnAll() {
+    try {
+      const findAll = await registroRonda.findAll()
+      return findAll;
     }
-    catch(e){
+    catch (e) {
       return []
     }
   }
   //
-  async desfazerRota(idRonda){
-    try{
+  async desfazerRota(idRonda) {
+    try {
       await registroRonda.update({
         status: 0
-      },{
-        where:{
+      }, {
+        where: {
           idRonda: idRonda
         }
       })
       return true
     }
-    catch(e){
+    catch (e) {
       return false
     }
   }

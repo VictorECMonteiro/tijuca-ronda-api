@@ -1,27 +1,54 @@
-const rotaLocalReposityClass = require("../repositories/rotaLocalreposity");
-const rotaLocalreposityInstance = new rotaLocalReposityClass();
+const sequelize = require("../configs/sequelize");
+// const rotaLocalReposityClass = require("../repositories/rotaLocalreposity");
+// const rotaReposity = require("./rotaReposity")
+// const localReposity =  new rotaReposity()
+// const rotaLocalreposityInstance = new rotaLocalReposityClass();
+// const modelGerais = require("../models/modelGerais")
+// const modelRotas_Locais = require("../models/modelRotas_Locais")
+// const modelRotas = require("../models/modelRotas")
+// const modelRondas = require("../models/modelRondas")
 
 
-async function teste(){
-  // let array1 = [23,25,50,60]
-  // let array2 = [50,25,23,60]
+async function teste(){ 
 
-  // for(let i = 0; i<=array1.length - 1; i++){
-  //   if(array1[i] === array2[i]){
-  //     array1.splice(i, i + 1);
-  //     array2.splice(i, i + 1);
-  //   }
-  //   for(let j = 0; j<= array1.length - 1; j++){
-  //     if(array1[i] === array2[j]){
-  //       if(array1[j] === array2[i]){
-  //         array1.splice(j, j+1)
-  //         array2.splice(j, j+1)
-  //       }
-  //     }
-  //   }
-  // }
-  const fresult = await rotaLocalreposityInstance.changeOrder([2],[3], 4);
-  console.log(fresult);
+
+
+  let jsonResposta = [];
+
+  let fresult = await sequelize.sequelize.query(
+    `
+      SELECT g.idGeral, g.latitude, g.longitude, g.data, g.hora, g.idLocal, g.atrasado, o.*, r.nomeRota, r.horaInicio, r.horaFim, r.data, r.idUsuario, r.idRonda, r.idRota from rondas as r
+      LEFT JOIN gerais as g on g.idRonda = r.idRonda
+      LEFT JOIN observacaos as o on o.idGeral = g.idGeral
+      WHERE r.idRonda = 169;
+    `, {
+      type:sequelize.Sequelize.QueryTypes.SELECT
+    })
+for (let i = 0; i <= fresult.length - 1; i++) {
+  if(!jsonResposta.some((item)=>item.idRonda === fresult[i].idRonda)){
+    let index = jsonResposta.push({idRonda: fresult[i].idRonda, data:[], idRota: fresult[i].idRota, locais:[]}) - 1
+    jsonResposta[index].data.push(JSON.stringify(fresult[i]))
+  }
+  else{
+    let index = jsonResposta.findIndex((item)=>item.idRonda === fresult[i].idRonda)
+    jsonResposta[index].data.push(JSON.stringify(fresult[i]))
+  }
+}
+  let getLocaisFromRoutes = await sequelize.sequelize.query(`          
+          SELECT l.nomeLocal, rl1.horario, rl1.idLocal, rl1.id FROM rotas_locais as rl1
+          LEFT JOIN locais as l on rl1.idLocal = l.idLocal
+          WHERE rl1.idRota = :idRota;`,
+        {
+          type: sequelize.Sequelize.QueryTypes.SELECT,
+          replacements:{
+            idRota: jsonResposta[0].idRota
+          }
+        })
+
+jsonResposta[0].locais.push(JSON.stringify(getLocaisFromRoutes))
+
+
+console.log(jsonResposta)
 }
 
 

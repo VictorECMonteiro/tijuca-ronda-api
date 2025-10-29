@@ -1,3 +1,5 @@
+const { Op } = require("sequelize");
+const sequelize = require("../configs/sequelize");
 const modelLocal = require("../models/modelLocais");
 const modelRotaLocal = require("../models/modelRotas_Locais")
 
@@ -5,14 +7,14 @@ class localQueries {
   constructor() { }
 
   createLocal = async (nomeLocal, latitude, longitude, idSetor) => {
+    //Insere um local na tabela locais, utilizando o nome do local, as coordenadas, e o setor a qual pertence
     try {
       const fresult = await modelLocal.create({
         nomeLocal: nomeLocal,
-        latitude: latitude,
-        longitude: longitude,
+        latitude: String(latitude),
+        longitude: String(longitude),
         idSetor: idSetor
       });
-      // console.log(fresult);
       return true;
     } catch (e) {
       console.log(e);
@@ -20,6 +22,7 @@ class localQueries {
     }
   };
   listLocals = async () => {
+    //Retorna todos os locais da tabela
     try {
       const fresult = await modelLocal.findAll();
       return fresult;
@@ -27,7 +30,26 @@ class localQueries {
       throw E;
     }
   };
+  listByIDList = async (lista) => {
+    //Lista os locais baseado num array de ID's e retorna a latitude, longitude e o idLocal 
+    console.log("CONSULTANDO LOCAIS")
+    console.log(Array.isArray(lista))
+    const result = await modelLocal.findAll({
+      attributes:["latitude","longitude","idLocal"],
+      where: {
+        idLocal: {
+          [Op.in]: lista
+        }
+      }
+    });
+    
+    let fresult = result.sort((a,b)=>(lista.indexOf(a.idLocal) - lista.indexOf(b.idLocal)))
+    
+    return fresult
+
+  };
   edit = async (dados) => {
+    //Edita os dados de um local
     var json = {};
     for (let key in dados) {
       if (dados[key]) {
@@ -35,7 +57,7 @@ class localQueries {
       }
     }
     try {
-      await modelLocal.update(json, {where:{idLocal: dados.idLocal}})
+      await modelLocal.update(json, { where: { idLocal: dados.idLocal } })
 
       return true
     }
@@ -46,6 +68,7 @@ class localQueries {
 
   }
   deleteLocal = async (idLocal) => {
+    //Remove um local da tabela
     try {
       await modelLocal.destroy({
         where: {

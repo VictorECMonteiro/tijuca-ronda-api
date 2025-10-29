@@ -3,7 +3,7 @@ const verificarItensRepetidos = require("../utils/verificarItemRepetido");
 
 class rotaService {
   rotaQueriesl = new rotaQueries();
-
+  //Service para processamento de dados para criar rotas, chamando o reposity posteriormente.
   async createService(nomeRota, horarioInicio, idLocal, horarioLocais, idUsuario) {
     let nomeRotaFormatado = nomeRota.toLowerCase()
 
@@ -23,23 +23,31 @@ class rotaService {
 
   }
   async delete(idRota) {
+    //Service para deletar rotas baseado em idRota
     const fresult = await this.rotaQueriesl.delete(idRota);
     return fresult;
   }
   async list() {
+    //Service para listar rotas
     const fresult = await this.rotaQueriesl.list();
     return fresult;
   }
   async listLocals(idRota) {
+    //Service para listar locais das rotas
     const fresult = await this.rotaQueriesl.listLocals(idRota)
     return fresult;
   }
   async defUserServ(idRota, idUsuario) {
+
+    //Service para definir usuário da rota
     const fresult = await this.rotaQueriesl.defUser(idRota, idUsuario)
     return fresult;
   }
   async changeLocalOrderService(listaAnterior, listaAtual, idRota) {
+    //Service para lidar com a mudança de ordem de locais
+
     for (let i = 0; i <= listaAnterior.length - 1; i++) {
+      //Percorre todo o array e remove iguais inversos na lista
       if (listaAnterior[i] === listaAtual[i]) {
         listaAnterior.splice(i, i + 1);
         listaAtual.splice(i, i + 1);
@@ -53,6 +61,8 @@ class rotaService {
         }
       }
     }
+    console.log(listaAnterior)
+    console.log(listaAtual)
 
 
     const result = await this.rotaQueriesl.changeOrder(listaAnterior, listaAtual, idRota)

@@ -1,6 +1,9 @@
 //Imports
 const express = require("express");
 const app = express();
+const compression = require("compression")
+const helmet = require("helmet");
+const RateLimit = require("express-rate-limit");
 require("dotenv").config();
 const loginRouter = require("./src/routes/loginRoutes");
 const setorRouter = require("./src/routes/setorRoutes")
@@ -12,11 +15,33 @@ const swaggerUi = require("swagger-ui-express");
 const config = require("./swagger.json");
 const cors = require("cors");
 const geralRouter = require("./src/routes/geralRoutes");
-//
 //Configurações
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}))
 app.use(cors());
+
+app.use(compression())
+
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      "script-src": ["'self'", "cdn.jsdelivr.net"],
+    },
+  }),
+);
+
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 20,
+});
+
+app.use(limiter);
+
+
+
+// app.use(express.urlencoded({extended: true}))
 //
 
 //Caso for Usar cookies, colocar diretamente o IP da maquina, se não, só o / já abrange tudo
