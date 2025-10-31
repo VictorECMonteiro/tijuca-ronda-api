@@ -20,6 +20,9 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cors());
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
 app.use(compression())
 
@@ -38,6 +41,14 @@ const limiter = RateLimit({
 });
 
 app.use(limiter);
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+});
+
+const uploadDir = path.join(__dirname, "/uploads");
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
 
 

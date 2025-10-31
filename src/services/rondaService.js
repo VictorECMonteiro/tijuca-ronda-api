@@ -26,35 +26,32 @@ class rondaService {
   }
 
   async pararRonda(data, filesUpload) {
+    const processedFiles = [];
     
-    const formData = new FormData({ maxDataSize: 5097152 });
+      for (const file of filesUpload) {
+      // Mantém o nome original
+      const outputPath = path.join(uploadDir, file.originalname);
 
-    for (let i = 0; i <= filesUpload.length - 1; i++) {
+      // Faz a compressão e salva
+      await sharp(file.buffer)
+        .jpeg({ quality: 50 })
+        .toFile(outputPath);
 
-      let compressedBuffer = await sharp(filesUpload[i].buffer).jpeg({ quality: 50 }).toBuffer();
-
-      formData.append(filesUpload[i].originalname, compressedBuffer, {
-        filename: filesUpload[i].originalname,
-        contentType: "image/jpeg",
+      processedFiles.push({
+        originalName: file.originalname,
+        path: `/uploads/${file.originalname}`,
+        sizeKB: (file.size / 1024).toFixed(2),
+        compressed: true,
       });
     }
 
-    const response = await axios.post(`http://${process.env.ipBase}:5050/index.php`, formData, {
-      headers: formData.getHeaders(),
-    });
-
-    let jsonParse = response.data
-
-    if (jsonParse.success) {
+    try{
       const fresult = await this.rondaQueriesL.encerraRonda(data);
       return fresult
 
-    }
-    else {
+    }catch(e){
       return false
     }
-
-
   }
 
   async retornaLocaisVisitados(idRonda) {
