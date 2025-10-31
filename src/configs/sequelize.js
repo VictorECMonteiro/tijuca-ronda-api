@@ -1,9 +1,9 @@
 const Sequelize = require("sequelize");
 require("dotenv").config();
-const sequelize = new Sequelize("tijucaronda2", "root", process.env.dbKey, {
+const sequelize = new Sequelize("tijucaronda", process.env.dbUser, process.env.dbKey, {
   timezone: "-03:00",
-  host: process.env.ipDB,
-  dialect: "mysql",
+  host: process.env.ipDb,
+  dialect: process.env.dbType,
   port: process.env.dbPort,
   define: {
     timestamps: false,
@@ -13,7 +13,7 @@ const sequelize = new Sequelize("tijucaronda2", "root", process.env.dbKey, {
 sequelize
   .authenticate()
   .then(async () => {
-    
+    sequelize.sync()
     // const root = await sequelize.query("SELECT * FROM usuarios WHERE permissao = 'admin';", {
     //   Type: Sequelize.QueryTypes.SELECT
     // })

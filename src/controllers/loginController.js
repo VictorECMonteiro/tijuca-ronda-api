@@ -3,12 +3,13 @@ require("dotenv").config();
 const loginService = new Service();
 
 const loginControllerHandleCreator = async (req, res, next) => {
+  console.log(req.body.cpf, req.body.senhadeUsuario);
   //     {
   //         "nomedeUsuario": nomedeUsuario,
   //         "senhadeUsuario": senhadeUsuario,
   //         "permissao": permissao
 
-  // }
+  //     }
   //Requisita Service
   const fresult = await loginService.createService(
     req.body.nomedeUsuario,
@@ -34,11 +35,11 @@ const loginControllerHandle = async (req, res, next) => {
   //     "cpf": cpf,
   //     "senhadeUsuario": senhadeUsuario
   // }
-  console.log(req.body);
+  
 
   //Requisita service
   const fresult = await loginService.loginHandle(
-    req.body.cpf,
+    String(req.body.cpf),
     req.body.senhadeUsuario
   );
   //Responde a requisição com resultado do service
