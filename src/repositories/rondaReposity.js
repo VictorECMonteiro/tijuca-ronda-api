@@ -28,7 +28,7 @@ class rondaQueries {
   async gerarRetornar() {
     try {
       const dataAtual = date();
-
+      console.log(dataAtual)
       //PROCURA RONDAS COM A DATA ATUAL NO BANCO
       const resposta = await registroRonda.findAll({
         where: { data: dataAtual },
@@ -45,11 +45,14 @@ class rondaQueries {
       } else {
         let fresposta = [];
         //Para cada item de resposta, resgata os de locais e rotas na tabela rota_locais e incrementa em um json
+        console.log(resposta.length)
         for (let i = 0; i <= resposta.length - 1; i++) {
           const retrievingLocals = await Rotas_Locais.findAll({
             where: { idRota: resposta[i].idRota },
           });
+          console.log(retrievingLocals)
           for (let j = 0; j <= retrievingLocals.length - 1; j++) {
+            
 
             const retrievingLocalsName = await registroLocal.findOne({
               where: {
@@ -60,7 +63,7 @@ class rondaQueries {
               retrievingLocalsName.nomeLocal;
 
           }
-
+          console.log(fresposta)
           //Encontra a rota de cada ronda e incrementa no JSON
           const retrievingRoute = await registroRota.findOne({
             where: {
@@ -72,10 +75,15 @@ class rondaQueries {
             retrievingLocals,
             retrievingRoute,
           });
+
+
+          console.log(fresposta)
+          
         }
 
         // console.log(fresposta);
         return fresposta;
+        
       }
     } catch (e) {
       console.log(e);
@@ -88,9 +96,9 @@ class rondaQueries {
       // const rotas = await registroRota.findAll();
 
       let rotas = await sequelize.sequelize.query(`
-        SELECT rotas.*, ru.idUsuario from rotas
-        LEFT JOIN rota_users as ru on rotas.idRota = ru.idRota;`, { type: sequelize.Sequelize.QueryTypes.SELECT })
-
+        SELECT rotas.*, ru."idUsuario" from rotas
+        LEFT JOIN rota_users as ru on rotas."idRota" = ru."idRota";`, { type: sequelize.Sequelize.QueryTypes.SELECT })
+        console.log(rotas)
       if (rotas.length === 0) {
         return false;
       }
@@ -226,8 +234,8 @@ class rondaQueries {
           })
 
         for (let i = 0; i <= locaisData.length - 1; i++) {
-          let estaNoLocal = calculateToleranceOfLocation({ latitudeUsuario: JSON.parse(data.latitude)[i], longitudeUsuario: JSON.parse(data.longitude)[i] }, { latitudeLocal: locaisData[i].latitude, longitudeLocal: locaisData[i].longitude }, 100);
-
+          // let estaNoLocal = calculateToleranceOfLocation({ latitudeUsuario: JSON.parse(data.latitude)[i], longitudeUsuario: JSON.parse(data.longitude)[i] }, { latitudeLocal: locaisData[i].latitude, longitudeLocal: locaisData[i].longitude }, 100);
+    
           let logRegistry = await logClass.writeLog(
             jsonData.idUsuario,
             jsonData.idRonda,
@@ -270,12 +278,12 @@ class rondaQueries {
   async retornaLocaisVisitados(idRonda) {
     const localFinded = await sequelize.sequelize.query(
       `
-      SELECT distinct t4.nomeLocal, t5.idRonda, t5.hora, t4.idLocal, t5.idUsuario from rondas as t1
-      LEFT JOIN rotas as t2 on t1.idRota = t2.idRota
-      LEFT JOIN rotas_locais as t3 on t3.idRota = t2.idRota
-      LEFT JOIN locais as t4 on t4.idLocal = t3.idLocal
-      LEFT JOIN gerais as t5 on t5.idRonda = t1.idRonda AND t5.idLocal = t3.idLocal
-      where t1.idRonda = :idRonda;`,
+      SELECT distinct t4."nomeLocal", t5."idRonda", t5."hora", t4."idLocal", t5."idUsuario" from rondas as t1
+      LEFT JOIN rotas as t2 on t1."idRota" = t2."idRota"
+      LEFT JOIN rotas_locais as t3 on t3."idRota" = t2."idRota"
+      LEFT JOIN locais as t4 on t4."idLocal" = t3."idLocal"
+      LEFT JOIN gerais as t5 on t5."idRonda" = t1."idRonda" AND t5."idLocal" = t3."idLocal"
+      where t1."idRonda" = :idRonda;`,
       {
         replacements: {
           idRonda: idRonda,

@@ -2,8 +2,10 @@ const { default: axios } = require("axios");
 const FormData = require('form-data');
 const rondaQueries = require("../repositories/rondaReposity");
 const sharp = require("sharp")
+const path = require("path");
 require("dotenv").config();
 const formDataToJSON = require("../utils/formDataToJSON")
+const uploadDir = path.join(__dirname, "../../uploads");
 class rondaService {
   rondaQueriesL = new rondaQueries();
 
@@ -13,7 +15,9 @@ class rondaService {
       const fresult = await this.rondaQueriesL.gerarRetornar();
       // console.log(fresult);
       return fresult;
-    } catch (e) { }
+    } catch (e) { 
+      return e
+    }
   }
   async iniciarRonda(idRonda) {
     try {
@@ -30,7 +34,7 @@ class rondaService {
     
       for (const file of filesUpload) {
       // Mantém o nome original
-      const outputPath = path.join(uploadDir, file.originalname);
+      const outputPath = path.join(uploadDir, file.originalname + ".jpeg");
 
       // Faz a compressão e salva
       await sharp(file.buffer)

@@ -46,7 +46,7 @@ const loginControllerHandle = async (req, res, next) => {
   // console.log(fresult + "resultado final");
   fresult.success == true
     ? res.send(fresult)
-    : res.status(400).json({ success: false });
+    : res.status(400).json({ fresult });
 
   // res.send(fresult)
 };

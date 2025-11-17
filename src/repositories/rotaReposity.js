@@ -64,14 +64,15 @@ class rotaQueries {
   async list() {
     try {
       const fresult = await sequelize.sequelize.query(`
-          SELECT rotas.*, usuarios.nomedeUsuario FROM rotas
-          LEFT JOIN rota_users on rota_users.idRota = rotas.idRota
-          LEFT JOIN usuarios on rota_users.idUsuario = usuarios.idUsuario
-          WHERE 1;
+          SELECT rotas.*, usuarios."nomedeUsuario" FROM rotas
+          LEFT JOIN rota_users on rota_users."idRota" = rotas."idRota"
+          LEFT JOIN usuarios on rota_users."idUsuario" = usuarios."idUsuario";
           ;
         `, {
         type: sequelize.Sequelize.QueryTypes.SELECT
       })
+
+      // const fresult = await registroRota.findAll();
       console.log(fresult)
       return fresult;
     } catch (e) {
@@ -81,9 +82,9 @@ class rotaQueries {
   async listLocals(idRota) {
     try {
       const fresult = await sequelize.sequelize.query(`
-          SELECT l.nomeLocal, rl1.horario, rl1.idLocal, rl1.id FROM rotas_locais as rl1
-          LEFT JOIN locais as l on rl1.idLocal = l.idLocal
-          WHERE rl1.idRota = :idRota;
+          SELECT l."nomeLocal", rl1."horario", rl1."idLocal", rl1."id" FROM rotas_locais as rl1
+          LEFT JOIN locais as l on rl1."idLocal" = l."idLocal"
+          WHERE rl1."idRota" = :idRota;
         `, {
         replacements: {
           idRota: idRota
@@ -93,7 +94,7 @@ class rotaQueries {
       return fresult;
     }
     catch (e) {
-      return []
+      return e.message
     }
   }
   async defUser(idRota, idUsuario) {

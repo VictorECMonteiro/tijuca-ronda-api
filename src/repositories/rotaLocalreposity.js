@@ -11,7 +11,7 @@ class rotaLocalQueries {
             try {
                 let idAntigo = ordemAnterior[i];
                 let idAtual = ordemAtual[i];
-                let idMax = (await sequelize.sequelize.query(`SELECT MAX(id) + 1 as id from tijucaronda2.rotas_locais;`, {
+                let idMax = (await sequelize.sequelize.query(`SELECT MAX(id) + 1 as id from rotas_locais;`, {
                     type: sequelize.Sequelize.QueryTypes.SELECT
                 }))[0].id
                 let tmpid = 999999 + Math.floor(Math.random() * 1000)
@@ -21,7 +21,7 @@ class rotaLocalQueries {
                 await sequelize.sequelize.transaction(async (t) => {
 
                     await sequelize.sequelize.query(`
-                        update tijucaronda2.rotas_locais set id=:tmpid where id = :idAtual AND idRota = :idRota;`,
+                        update rotas_locais set id=:tmpid where id = :idAtual AND idRota = :idRota;`,
                         {
                             replacements: {
                                 tmpid,
@@ -33,7 +33,7 @@ class rotaLocalQueries {
                         }
                     )
                     await sequelize.sequelize.query(`
-                        update tijucaronda2.rotas_locais set horario=:horario1 where id = :tmpid;`,
+                        update rotas_locais set horario=:horario1 where id = :tmpid;`,
                         {
                             replacements: { horario1, tmpid },
                             transaction: t
@@ -41,7 +41,7 @@ class rotaLocalQueries {
 
                     )
                     await sequelize.sequelize.query(`
-                        update tijucaronda2.rotas_locais set id=:idAtual where id = :idAntigo AND idRota = :idRota;`,
+                        update rotas_locais set id=:idAtual where id = :idAntigo AND idRota = :idRota;`,
                         {
                             replacements: {
                                 tmpid: tmpid,
@@ -53,7 +53,7 @@ class rotaLocalQueries {
                         }
                     )
                     await sequelize.sequelize.query(`
-                        update tijucaronda2.rotas_locais set horario=:horario2 where id = :idAtual;`,
+                        update rotas_locais set horario=:horario2 where id = :idAtual;`,
                         {
                             replacements: { horario2, idAtual },
                             transaction: t
@@ -62,7 +62,7 @@ class rotaLocalQueries {
 
                     )
                     await sequelize.sequelize.query(`
-                        update tijucaronda2.rotas_locais set id=:idAntigo where id = :tmpid AND idRota = :idRota;`,
+                        update rotas_locais set id=:idAntigo where id = :tmpid AND idRota = :idRota;`,
                         {
                             replacements: {
                                 tmpid: tmpid,
@@ -75,7 +75,7 @@ class rotaLocalQueries {
                     )
 
                     await sequelize.sequelize.query(`
-                        ALTER TABLE tijucaronda2.rotas_locais 
+                        ALTER TABLE rotas_locais 
                         AUTO_INCREMENT = :idMax
                     `, {
                         replacements: { idMax },

@@ -51,6 +51,8 @@ const uploadDir = path.join(__dirname, "/uploads");
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
 
+app.use(express.static(path.join(__dirname, "/build")));
+
 
 // app.use(express.urlencoded({extended: true}))
 //
@@ -62,8 +64,15 @@ if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 // }))
 
 //Declaração de grupo de rotas
+
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "/build", "index.html"));
+// });
+
+
+
 app.get("/", (req, res) => {
-  res.send("Esta é a API do projeto: Tijuca Ronda");
+  res.send("API TIJUCA RONDA ADM");
 });
 app.use("/doc", swaggerUi.serve, swaggerUi.setup(config));
 app.use("/login", loginRouter);
